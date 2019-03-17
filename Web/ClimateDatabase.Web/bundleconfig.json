@@ -1,0 +1,68 @@
+[
+  {
+    "outputFileName": "wwwroot/css/site.min.css",
+    "inputFiles": [
+      "wwwroot/css/site.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/theme/theme.css",
+    "inputFiles": [
+      "wwwroot/theme/css/theme-indigo.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/theme/theme-waves.css",
+    "inputFiles": [
+      "wwwroot/theme/components/waves/waves.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/theme/theme-icons.css",
+    "inputFiles": [
+      "wwwroot/theme/components/font-awesome/css/font-awesome.min.css",
+      "wwwroot/theme/components/elegant-font/style.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/theme/owl-carousel.css",
+    "inputFiles": [
+      "wwwroot/theme/components/owl-carousel/assets/owl.carousel.min.css",
+      "wwwroot/theme/components/owl-carousel/assets/owl.theme.default.min.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/theme/jquery.mCustomScrollbar.css",
+    "inputFiles": [
+      "wwwroot/theme/components/malihu-custom-scrollbar/jquery.mCustomScrollbar.min.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/theme/theme.js",
+    "inputFiles": [
+      "wwwroot/theme/js/jquery-migrate-3.0.0.min.js",
+      "wwwroot/theme/components/owl-carousel/owl.carousel.min.js",
+      "wwwroot/theme/components/waves/waves.min.js",
+      "wwwroot/theme/components/malihu-custom-scrollbar/jquery.mCustomScrollbar.concat.min.js",
+      "wwwroot/theme/js/jquery.appear.js",
+      "wwwroot/theme/js/jquery.stellar.min.js",
+      "wwwroot/theme/js/general.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/site.min.js",
+    "inputFiles": [
+      "wwwroot/js/site.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    }
+  },
+  {
+    "outputFileName": "wwwroot/lib/jquery/dist/jquery.min.js",
+    "inputFiles": [
+      "wwwroot/lib/jquery/dist/jquery.js"
+    ]
+  }
+]

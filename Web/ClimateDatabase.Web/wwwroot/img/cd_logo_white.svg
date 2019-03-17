@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2732" height="220" viewBox="0 0 2732 220">
+  <defs>
+    <style>
+      .cls-1 {
+        font-size: 300px;
+        fill: #fff;
+        font-family: Roboto;
+        font-weight: 200;
+      }
+
+      .cls-2 {
+        font-weight: 800;
+      }
+    </style>
+  </defs>
+  <text id="CLIMATEDATABASE" class="cls-1" x="-21" y="217">CLIMATE<tspan class="cls-2">DATABASE</tspan></text>
+</svg>

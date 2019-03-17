@@ -1,0 +1,148 @@
+﻿@inject Microsoft.Extensions.Options.IOptions<ClimateDatabase.Common.Settings.ApplicationSettings> AppSettings
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@this.ViewData["Title"] - @AppSettings.Value.Name</title>
+
+    <environment names="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/theme/components/font-awesome/css/font-awesome.css" />
+        <link rel="stylesheet" href="~/theme/components/elegant-font/style.css" />
+        <link rel="stylesheet" href="~/theme/owl-carousel.css" />
+        <link rel="stylesheet" href="~/theme/jquery.mCustomScrollbar.css" />
+        <link rel="stylesheet" href="~/theme/theme-waves.css" />
+        <link rel="stylesheet" href="~/theme/theme.css" title="theme-default" />
+        <link rel="stylesheet" href="~/css/site.css" />
+    </environment>
+    <environment names="Staging,Production">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/theme/components/font-awesome/css/font-awesome.min.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/theme/components/elegant-font/style.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/theme/owl-carousel.min.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/theme/jquery.mCustomScrollbar.min.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/theme/theme-waves.min.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/theme/theme.min.css" title="theme-default" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+    </environment>
+    @this.RenderSection("Styles", required: false)
+</head>
+<body class="main-body">
+    <nav class="navbar navbar-theme navbar-fixed-top">
+        <div class="container-fluid">
+
+            <!-- Navbar Header -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="~/img/cd_logo_white.png" alt="ClimateDatabase" />
+                </a>
+            </div>
+            <!-- /Navbar Header -->
+            <!-- Navbar Content -->
+            <div class="collapse navbar-collapse" id="main-navbar">
+
+                <!-- Navigation -->
+                <ul class="nav navbar-nav">
+                    <li><a asp-area="" asp-action="" asp-controller="">Link 1</a></li>
+                    <li><a asp-area="" asp-action="" asp-controller="" asp-route-page="1" asp-route-pageSize="20">Link 2</a></li>
+                </ul>
+                <!-- /Navigation -->
+                <!-- Navigation Right -->
+                @await this.Html.PartialAsync("_LoginPartial")
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a asp-action="" asp-controller="" asp-area="" asp-route-page="1" asp-route-pageSize="20"><i class="icon fa fa-heart-o"></i> </a>
+                    </li>
+                </ul>
+                <!-- /Navigation Right -->
+                <!-- Search Form -->
+                <form id="searchForm" class="navbar-form navbar-form-toggleable navbar-right" method="get" asp-action="" asp-controller="">
+                    <div class="navbar-form-toggle-content">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Search" name="searchField">
+                            <input hidden name="page" value="1" />
+                            <input hidden name="pageSize" value="20" />
+                        </div>
+                    </div>
+                    <button class="btn btn-primary-dark btn-waves btn-icon navbar-form-toggle waves-effect waves-light"><i class="icon fa fa-search"></i> </button>
+                </form>
+                <!-- /Search Form -->
+
+            </div>
+            <!-- /Navbar Content -->
+
+        </div>
+    </nav>
+
+    <partial name="_CookieConsentPartial" />
+
+    <div class="container body-content">
+        @this.RenderBody()
+    </div>
+
+    <footer class="footer">
+        <div class="footer-bottom-line bg-dark">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="links">
+                            <a href="#">About us</a> /
+                            <a href="#">Terms and conditions</a> /
+                            <a href="#">Privacy policy</a>
+                        </div>
+                    </div>
+                    <div class="col-xs-12">
+                        <div class="links">
+                            <a href="#"><i class="icon fa fa-facebook"></i></a>
+                            <a href="#"><i class="icon fa fa-instagram"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-xs-12">
+                        <p class="copyright no-margin">
+                            &copy; @DateTime.Now.Year - @AppSettings.Value.Name
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <environment names="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="~/theme/theme.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+    </environment>
+    <environment names="Staging,Production">
+        <script src="~/lib/jquery/dist/jquery.min.js"
+                asp-fallback-test="window.jQuery"
+                crossorigin="anonymous">
+        </script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"
+                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
+                crossorigin="anonymous">
+        </script>
+        <script src="~/theme/theme.min.js"></script>
+        <script src="~/js/site.min.js" asp-append-version="true"></script>
+    </environment>
+    <script>
+        $(document).ready(function () {
+            $('#searchForm').on('keypress', function (e) {
+                if (e.keyCode == 13) {
+                    $(this).submit();
+                }
+            });
+        });
+    </script>
+
+    @this.RenderSection("Scripts", required: false)
+</body>
+</html>
