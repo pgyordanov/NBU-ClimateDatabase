@@ -25,6 +25,10 @@
             //Configuration.ProxyCreationEnabled = true;
         }
 
+        public DbSet<ClimateStation> ClimateStations { get; set; }
+
+        public DbSet<ClimateStationReading> ClimateStationReadings { get; set; }
+
         public DbSet<Setting> Settings { get; set; }
 
         public override int SaveChanges() => this.SaveChanges(true);
@@ -52,6 +56,14 @@
             base.OnModelCreating(builder);
 
             ConfigureUserIdentityRelations(builder);
+
+            builder.Entity<ClimateStation>()
+                .HasMany(cs => cs.Readings)
+                .WithOne(cs => cs.ClimateStation)
+                .HasForeignKey(cs => cs.ClimateStationId);
+
+            builder.Entity<ClimateStationReading>()
+                .HasKey(csr => new { csr.ClimateStationId, csr.Year, csr.Month });
 
             EntityIndexesConfiguration.Configure(builder);
 

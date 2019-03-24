@@ -122,6 +122,83 @@ namespace ClimateDatabase.Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("ClimateDatabase.Data.Models.ClimateStation", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("CreatedOn");
+
+                    b.Property<DateTime?>("DeletedOn");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<DateTime?>("ModifiedOn");
+
+                    b.Property<string>("Name");
+
+                    b.Property<double>("Weight");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IsDeleted");
+
+                    b.ToTable("ClimateStations");
+                });
+
+            modelBuilder.Entity("ClimateDatabase.Data.Models.ClimateStationReading", b =>
+                {
+                    b.Property<string>("ClimateStationId");
+
+                    b.Property<int>("Year");
+
+                    b.Property<int>("Month");
+
+                    b.Property<double?>("AverageTemperature");
+
+                    b.Property<double>("ClimateStationIntervalWeight");
+
+                    b.Property<DateTime>("CreatedOn");
+
+                    b.Property<int?>("DaysWithRainMoreThan10mm");
+
+                    b.Property<int?>("DaysWithRainMoreThan1mm");
+
+                    b.Property<int?>("DaysWithThunder");
+
+                    b.Property<int?>("DaysWithWindFasterThan14ms");
+
+                    b.Property<DateTime?>("DeletedOn");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<double?>("MaximumRain");
+
+                    b.Property<int?>("MaximumRainDay");
+
+                    b.Property<double?>("MaximumTemperature");
+
+                    b.Property<int?>("MaximumTemperatureDay");
+
+                    b.Property<double?>("MinimumTemperature");
+
+                    b.Property<int?>("MinimumTemperatureDay");
+
+                    b.Property<DateTime?>("ModifiedOn");
+
+                    b.Property<double?>("RainRatio");
+
+                    b.Property<double?>("RainSum");
+
+                    b.Property<double?>("TemperatureDeviation");
+
+                    b.HasKey("ClimateStationId", "Year", "Month");
+
+                    b.HasIndex("IsDeleted");
+
+                    b.ToTable("ClimateStationReadings");
+                });
+
             modelBuilder.Entity("ClimateDatabase.Data.Models.Setting", b =>
                 {
                     b.Property<int>("Id")
@@ -231,6 +308,14 @@ namespace ClimateDatabase.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("ClimateDatabase.Data.Models.ClimateStationReading", b =>
+                {
+                    b.HasOne("ClimateDatabase.Data.Models.ClimateStation", "ClimateStation")
+                        .WithMany("Readings")
+                        .HasForeignKey("ClimateStationId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
