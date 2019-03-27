@@ -5,7 +5,7 @@ namespace ClimateDatabase.Web.Areas.Admin.Models
     public class PaginationVM
     {
         [Range(0, int.MaxValue)]
-        public int Page { get; set; }
+        public int ShowPage { get; set; }
 
         [Range(1, 40)]
         public int PageSize { get; set; }

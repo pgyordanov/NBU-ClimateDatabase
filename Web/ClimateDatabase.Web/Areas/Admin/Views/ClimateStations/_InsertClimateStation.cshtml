@@ -1,0 +1,45 @@
+﻿@model ClimateDatabase.Web.Areas.Admin.Models.ClimateStation.InsertClimateStationVM
+
+<div class="row actions mb-0p5">
+    <div class="col-xs-12 text-left">
+        <button type="button" class="btn btn-waves btn-secondary waves-effect waves-light" data-toggle="modal" data-target="#insert-station-modal">
+            Add new
+        </button>
+    </div>
+
+    <div class="modal fade" id="insert-station-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+                    <h4 class="modal-title">Insert climate station</h4>
+                </div>
+
+                <div class="modal-body">
+                    <form class="form-custom col-xs-12" method="post" asp-controller="ClimateStations" asp-action="InsertClimateStation" id="insert-station-form">
+                        <div class="form-group row">
+                            <div class="col-xs-12 col-md-6">
+                                <div class="md-input">
+                                    <label for="name" class="md-input-placeholder">Name</label>
+                                    <input asp-for="Name" type="text" class="md-input-control">
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6">
+                                <div class="md-input">
+                                    <label for="weight" class="md-input-placeholder" asp-for="Weight">Weight</label>
+                                    <input  asp-for="Weight" type="text" class="md-input-control">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-t btn-sm btn-waves waves-effect waves-light" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-waves btn-success waves-effect waves-light" id="insert-station-button">Insert station</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

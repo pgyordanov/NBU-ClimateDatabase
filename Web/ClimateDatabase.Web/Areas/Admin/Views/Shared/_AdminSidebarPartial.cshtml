@@ -26,13 +26,22 @@
 
             <!-- Navigation Item -->
             <li>
-                <a href="@Url.Action("Index", "Users", new {page = 1, pageSize = 20})" class="nav-item btn-waves">
+                <a asp-area="Admin" asp-controller="Users" asp-action="Index" asp-route-showPage="1" asp-route-pageSize="20" class="nav-item btn-waves">
                     <i class="icon fa fa-user"></i>
                     <span class="list-animated-item" data-list-name="lst-nav-level-0">Users</span>
                 </a>
             </li>
             <!-- /Navigation Item -->
             <li class="separator"></li>
+
+            <!-- Navigation Item -->
+            <li>
+                <a asp-area="Admin" asp-controller="ClimateStations" asp-action="Index" asp-route-showPage="1" asp-route-pageSize="20" class="nav-item btn-waves">
+                    <i class="icon fa fa-globe"></i>
+                    <span class="list-animated-item" data-list-name="lst-nav-level-0">Climate stations</span>
+                </a>
+            </li>
+            <!-- /Navigation Item -->
 
         </ul>
         <!-- /Navigation -->

@@ -43,9 +43,9 @@
             return this.View(new UserListVM
             {
                 Users = paginatedUsers,
-                NextPage = pagination.Page < totalPages ? pagination.Page + 1 : pagination.Page,
-                PreviousPage = pagination.Page > 1 ? pagination.Page - 1 : pagination.Page,
-                CurrentPage = pagination.Page,
+                NextPage = pagination.ShowPage < totalPages ? pagination.ShowPage + 1 : pagination.ShowPage,
+                PreviousPage = pagination.ShowPage > 1 ? pagination.ShowPage - 1 : pagination.ShowPage,
+                CurrentPage = pagination.ShowPage,
                 TotalPages = totalPages,
                 ShowPagination = totalPages > 1,
             });
