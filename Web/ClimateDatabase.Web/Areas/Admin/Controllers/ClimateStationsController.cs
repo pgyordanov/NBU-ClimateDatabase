@@ -1,14 +1,16 @@
 ﻿namespace ClimateDatabase.Web.Areas.Admin.Controllers
 {
+    using System;
     using System.Linq;
+    using System.Threading.Tasks;
 
+    using AutoMapper;
     using AutoMapper.QueryableExtensions;
 
     using ClimateDatabase.Data.Models;
     using ClimateDatabase.Services.Contracts;
     using ClimateDatabase.Web.Areas.Admin.Controllers.Base;
     using ClimateDatabase.Web.Areas.Admin.Models;
-    using ClimateDatabase.Web.Areas.Admin.Models.Base;
     using ClimateDatabase.Web.Areas.Admin.Models.ClimateStation;
 
     using Microsoft.AspNetCore.Mvc;
@@ -38,7 +40,7 @@
                 climateStationQuery = climateStationQuery.Where(a => a.Name.ToLower().Contains(climateStationName.ToLower()));
             }
 
-            climateStationQuery = climateStationQuery.OrderBy(u => u.IsDeleted).ThenByDescending(u => u.Name);
+            climateStationQuery = climateStationQuery.OrderByDescending(u => u.Name);
 
             var paginatedStations = this.PaginateList<ClimateStationVM>(pagination, climateStationQuery.ProjectTo<ClimateStationVM>()).ToList();
 
@@ -57,27 +59,36 @@
             return this.View(climateStationsModel);
         }
 
-        [HttpGet]
-        [Route("admin/climate-stations/{climateStationId}")]
-        public IActionResult ClimateStation(string climateStationId)
-        {
-            if (string.IsNullOrWhiteSpace(climateStationId))
-            {
-                return this.NotFound($"invalid climate statation id");
-            }
+        //[HttpGet]
+        //[Route("admin/climate-stations/{climateStationId}")]
+        //public IActionResult ClimateStation(string climateStationId)
+        //{
+        //    if (string.IsNullOrWhiteSpace(climateStationId))
+        //    {
+        //        return this.NotFound($"invalid climate statation id");
+        //    }
 
-            return this.View();
-        }
+        //    return this.View();
+        //}
 
         [HttpPost]
         [Route("admin/climate-stations/insert")]
-        public IActionResult InsertClimateStation(InsertClimateStationVM model)
+        public async Task<IActionResult> InsertClimateStation(InsertClimateStationVM model)
         {
             if (!this.ModelState.IsValid)
             {
                 this.AddAlert(false, $"An error has occured while creating the station. Please try again.");
                 return this.RedirectToAction("Index", new PaginationVM { ShowPage = 1, PageSize = 20 });
             }
+
+            var climateStation = Mapper.Map<ClimateStation>(model);
+
+            climateStation.CreatedOn = DateTime.Now;
+            climateStation.ModifiedOn = DateTime.Now;
+
+            await this.climateStationService.Create(climateStation);
+
+            this.AddAlert(true, $"Station {model.Name} was successfully inserted.");
 
             return this.RedirectToAction("Index", new PaginationVM { ShowPage = 1, PageSize = 20 });
         }

@@ -5,7 +5,7 @@
     using ClimateDatabase.Common.Mapping;
     using ClimateDatabase.Data.Models;
 
-    public class ClimateStationVM : IMapFrom<ClimateStation>
+    public class ClimateStationExtendedVM : IMapFrom<ClimateStation>
     {
         public string Id { get; set; }
 

@@ -1,18 +1,18 @@
-﻿@model ClimateDatabase.Web.Areas.Admin.Models.ClimateStation.ClimateStationListVM
+﻿@model ClimateDatabase.Web.Areas.Admin.Models.ClimateStationReading.ClimateStationReadingListVM
 
 @{
-    ViewBag.Title = "Climate stations";
+    ViewBag.Title = "Climate station readings";
     Layout = "_Layout";
 }
 
 <partial name="_StatusMessage" model="ViewBag.Alert" />
 
 <div class="page-intro">
-    <h2>Climate stations</h2>
+    <h2>Climate station readings</h2>
 </div>
 
 <div class="row">
-    <form class="form-custom col-xs-12" method="get" asp-controller="ClimateStations" asp-action="Index" id="filter-form">
+    <form class="form-custom col-xs-12" method="get" asp-controller="ClimateStationReadings" asp-action="Index" id="filter-form">
         <div class="panel panel-white">
             <div class="panel-body">
 
@@ -51,7 +51,7 @@
     </form>
 </div>
 
-<partial name="_InsertClimateStation" model="new ClimateDatabase.Web.Areas.Admin.Models.ClimateStation.InsertClimateStationVM()" />
+@*<partial name="_InsertClimateStation" model="new ClimateDatabase.Web.Areas.Admin.Models.ClimateStation.InsertClimateStationVM()" />*@
 
 <div class="panel panel-white">
     <div class="panel-body">
@@ -59,7 +59,7 @@
             <table class="table table-hover no-mb">
                 <thead>
                     <tr>
-                        <th>Name</th>
+                        <th>Climate station</th>
                         <th>Created on</th>
                         <th>Last modified on</th>
                         @*<th></th>*@
@@ -67,13 +67,13 @@
                 </thead>
                 <tbody>
 
-                    @foreach (var station in Model.ClimateStations)
+                    @foreach (var reading in Model.ClimateStationReadings)
                     {
 
                         <tr>
-                            <td>@station.Name</td>
-                            <td>@station.CreatedOn.ToString("dd/MM/yyyy HH:mm")</td>
-                            <td>@station.ModifiedOn.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td>@reading.ClimateStationId</td>
+                            <td>@reading.CreatedOn.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td>@reading.ModifiedOn.ToString("dd/MM/yyyy HH:mm")</td>
                             @*<td>
                                 <a asp-area="Admin" asp-controller="ClimateStations" asp-action="ClimateStation" asp-route-climateStationId="@station.Id">Details</a>
                             </td>*@
@@ -91,7 +91,7 @@
     <nav aria-label="Page navigation">
         <ul class="pagination no-mt mb">
             <li>
-                <a href="@Url.Action("Index", "ClimateStations", new {
+                <a href="@Url.Action("Index", "ClimateStationReadings", new {
                                                    showPage = Model.PreviousPage,
                                                    pageSize = Context.Request.Query["pageSize"],
                                                    climateStationName = Context.Request.Query["climateStationName"],
@@ -102,7 +102,7 @@
                 if (i == Model.CurrentPage)
                 {
                     <li class="active">
-                        <a href="@Url.Action("Index", "ClimateStations", new {
+                        <a href="@Url.Action("Index", "ClimateStationReadings", new {
                                                    showPage = i,
                                                    pageSize = Context.Request.Query["pageSize"],
                                                    climateStationName = Context.Request.Query["climateStationName"],
@@ -114,7 +114,7 @@
                 else
                 {
                     <li>
-                        <a href="@Url.Action("Index", "ClimateStations", new {
+                        <a href="@Url.Action("Index", "ClimateStationReadings", new {
                                                    showPage = i,
                                                    pageSize = Context.Request.Query["pageSize"],
                                                    climateStationName = Context.Request.Query["climateStationName"],
@@ -126,7 +126,7 @@
             }
 
             <li>
-                <a href="@Url.Action("Index", "ClimateStations", new {
+                <a href="@Url.Action("Index", "ClimateStationReadings", new {
                                                    showPage = Model.NextPage,
                                                    pageSize = Context.Request.Query["pageSize"],
                                                    climateStationName = Context.Request.Query["climateStationName"],
@@ -137,7 +137,7 @@
 }
 
 
-@section Scripts{
+@*@section Scripts{
     <partial name="_ValidationScriptsPartial" />
     <script src="~/js/admin/climate-stations/climate-stations.js"></script>
     <script>
@@ -150,4 +150,4 @@
             climateDbApp.init();
         })(window.climateDbApp);
     </script>
-}
+}*@

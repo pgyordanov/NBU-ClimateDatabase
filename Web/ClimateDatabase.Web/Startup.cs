@@ -109,6 +109,7 @@
             // Application services
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddScoped(typeof(ICrudService<>), typeof(CrudService<>));
+            services.AddScoped(typeof(IBaseCrudService<>), typeof(BaseCrudService<>));
 
             // Identity stores
             services.AddTransient<IUserStore<ApplicationUser>, ApplicationUserStore>();

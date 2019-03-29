@@ -9,13 +9,10 @@
     {
         public virtual ClimateStation ClimateStation { get; set; }
 
-        [Column(Order = 2)]
         public string ClimateStationId { get; set; }
 
-        [Column(Order = 2)]
         public int Month { get; set; }
 
-        [Column(Order = 2)]
         public int Year { get; set; }
 
         [Range(0, 1)]

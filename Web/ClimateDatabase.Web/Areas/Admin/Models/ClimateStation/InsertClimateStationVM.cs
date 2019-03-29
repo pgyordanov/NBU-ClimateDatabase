@@ -9,8 +9,5 @@
     {
         [Required]
         public string Name { get; set; }
-
-        [Required]
-        public double Weight { get; set; }
     }
 }
