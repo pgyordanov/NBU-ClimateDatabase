@@ -21,7 +21,7 @@
                     <div class="col-xs-12 col-md-3">
                         <div class="md-input">
                             <label for="climateStationName" class="md-input-placeholder">Name</label>
-                            <input type="text" id="climateStationName" name="climateStationName" class="md-input-control" value="@Context.Request.Query["climateStationName"]">
+                            <input type="text" id="climateStationName" name="climateStationName" class="md-input-control typeahead" value="@Context.Request.Query["climateStationName"]" autocomplete="off">
                         </div>
                     </div>
                 </div>
@@ -75,8 +75,8 @@
                             <td>@station.CreatedOn.ToString("dd/MM/yyyy HH:mm")</td>
                             <td>@station.ModifiedOn.ToString("dd/MM/yyyy HH:mm")</td>
                             @*<td>
-                                <a asp-area="Admin" asp-controller="ClimateStations" asp-action="ClimateStation" asp-route-climateStationId="@station.Id">Details</a>
-                            </td>*@
+                                    <a asp-area="Admin" asp-controller="ClimateStations" asp-action="ClimateStation" asp-route-climateStationId="@station.Id">Details</a>
+                                </td>*@
                         </tr>
                     }
 
@@ -139,10 +139,12 @@
 
 @section Scripts{
     <partial name="_ValidationScriptsPartial" />
+    <script src="~/lib/typeahead/typeahead.bundle.js"></script>
     <script src="~/js/admin/climate-stations/climate-stations.js"></script>
     <script>
         (function (climateDbApp) {
             climateDbApp.climateStationsConfig = {
+                getStationsUrl: '@Url.Action("GetClimateStations", "ClimateStations", new { name = Html.Raw("QUERY") })',
                 insertStationFormId: '#insert-station-form',
                 insertStationFormSubmitButtonId: '#insert-station-button',
             }

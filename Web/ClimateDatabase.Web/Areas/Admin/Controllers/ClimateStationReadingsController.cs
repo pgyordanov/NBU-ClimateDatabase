@@ -1,6 +1,7 @@
 ﻿namespace ClimateDatabase.Web.Areas.Admin.Controllers
 {
     using System;
+    using System.Globalization;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -26,7 +27,7 @@
 
         [HttpGet]
         [Route("admin/climate-station-readings")]
-        public IActionResult Index(PaginationVM pagination, string climateStationName)
+        public IActionResult Index(PaginationVM pagination, string climateStationName, string fromPeriod, string toPeriod)
         {
             if (this.HasAlert)
             {
@@ -38,6 +39,30 @@
             if (!string.IsNullOrWhiteSpace(climateStationName))
             {
                 climateStationReadingQuery = climateStationReadingQuery.Where(a => a.ClimateStation.Name.ToLower().Contains(climateStationName.ToLower()));
+            }
+
+            if (!string.IsNullOrWhiteSpace(fromPeriod))
+            {
+                DateTime period;
+                bool result = DateTime.TryParseExact(fromPeriod, "MM-YYYY", CultureInfo.InvariantCulture, DateTimeStyles.None, out period);
+
+                if (result)
+                {
+                    climateStationReadingQuery = climateStationReadingQuery
+                        .Where(a => DateTime.ParseExact(a.Month + "-" + a.Year, "MM-YYYY", CultureInfo.InvariantCulture, DateTimeStyles.None) >= period);
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(toPeriod))
+            {
+                DateTime period;
+                bool result = DateTime.TryParseExact(toPeriod, "MM-YYYY", CultureInfo.InvariantCulture, DateTimeStyles.None, out period);
+
+                if (result)
+                {
+                    climateStationReadingQuery = climateStationReadingQuery
+                        .Where(a => DateTime.ParseExact(a.Month + "-" + a.Year, "MM-YYYY", CultureInfo.InvariantCulture, DateTimeStyles.None) <= period);
+                }
             }
 
             climateStationReadingQuery = climateStationReadingQuery.OrderByDescending(u => u.ClimateStation.Name);

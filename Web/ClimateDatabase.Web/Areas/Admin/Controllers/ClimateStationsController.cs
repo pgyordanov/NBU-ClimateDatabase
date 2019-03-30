@@ -92,5 +92,17 @@
 
             return this.RedirectToAction("Index", new PaginationVM { ShowPage = 1, PageSize = 20 });
         }
+
+        [HttpGet]
+        [Route("admin/climate-stations/get")]
+        public IActionResult GetClimateStations(string name)
+        {
+            var stations = this.climateStationService.GetAll()
+                .Where(a => a.Name.ToLower().Contains(name.ToLower()))
+                .Select(a => new { a.Id, a.Name })
+                .ToList();
+
+            return this.Json(stations);
+        }
     }
 }

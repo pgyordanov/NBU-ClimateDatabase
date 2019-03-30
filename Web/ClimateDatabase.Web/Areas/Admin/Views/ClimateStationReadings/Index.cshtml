@@ -20,8 +20,20 @@
                 <div class="form-group row">
                     <div class="col-xs-12 col-md-3">
                         <div class="md-input">
-                            <label for="climateStationName" class="md-input-placeholder">Name</label>
+                            <label for="climateStationName" class="md-input-placeholder">Station name</label>
                             <input type="text" id="climateStationName" name="climateStationName" class="md-input-control" value="@Context.Request.Query["climateStationName"]">
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-3">
+                        <div class="md-input" role="wrapper">
+                            <label for="fromPeriod" class="md-input-placeholder">From period</label>
+                            <input type="text" id="fromPeriod" name="fromPeriod" class="md-input-control datepicker" value="@Context.Request.Query["fromPeriod"]">
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-3">
+                        <div class="md-input" role="wrapper">
+                            <label for="toPeriod" class="md-input-placeholder">To period</label>
+                            <input type="text" id="toPeriod" name="toPeriod" class="md-input-control datepicker" value="@Context.Request.Query["toPeriod"]">
                         </div>
                     </div>
                 </div>
@@ -60,6 +72,9 @@
                 <thead>
                     <tr>
                         <th>Climate station</th>
+                        <th>Year</th>
+                        <th>Month</th>
+                        <th>Weight for month</th>
                         <th>Created on</th>
                         <th>Last modified on</th>
                         @*<th></th>*@
@@ -71,12 +86,15 @@
                     {
 
                         <tr>
-                            <td>@reading.ClimateStationId</td>
+                            <td>@reading.ClimateStation.Name</td>
+                            <td>@reading.Year</td>
+                            <td>@reading.Month</td>
+                            <td>@reading.ClimateStationIntervalWeight</td>
                             <td>@reading.CreatedOn.ToString("dd/MM/yyyy HH:mm")</td>
                             <td>@reading.ModifiedOn.ToString("dd/MM/yyyy HH:mm")</td>
                             @*<td>
-                                <a asp-area="Admin" asp-controller="ClimateStations" asp-action="ClimateStation" asp-route-climateStationId="@station.Id">Details</a>
-                            </td>*@
+                                    <a asp-area="Admin" asp-controller="ClimateStations" asp-action="ClimateStation" asp-route-climateStationId="@station.Id">Details</a>
+                                </td>*@
                         </tr>
                     }
 
@@ -95,6 +113,8 @@
                                                    showPage = Model.PreviousPage,
                                                    pageSize = Context.Request.Query["pageSize"],
                                                    climateStationName = Context.Request.Query["climateStationName"],
+                                                   fromPeriod = Context.Request.Query["fromPeriod"],
+                                                   toPeriod = Context.Request.Query["toPeriod"],
                                                })" class="pagination-prev" aria-label="Previous"></a>
             </li>
             @for (int i = 1; i <= Model.TotalPages; i++)
@@ -106,6 +126,8 @@
                                                    showPage = i,
                                                    pageSize = Context.Request.Query["pageSize"],
                                                    climateStationName = Context.Request.Query["climateStationName"],
+                                                   fromPeriod = Context.Request.Query["fromPeriod"],
+                                                   toPeriod = Context.Request.Query["toPeriod"],
                                                })">
                             @i
                         </a>
@@ -118,6 +140,8 @@
                                                    showPage = i,
                                                    pageSize = Context.Request.Query["pageSize"],
                                                    climateStationName = Context.Request.Query["climateStationName"],
+                                                   fromPeriod = Context.Request.Query["fromPeriod"],
+                                                   toPeriod = Context.Request.Query["toPeriod"],
                                                })">
                             @i
                         </a>
@@ -130,24 +154,38 @@
                                                    showPage = Model.NextPage,
                                                    pageSize = Context.Request.Query["pageSize"],
                                                    climateStationName = Context.Request.Query["climateStationName"],
+                                                   fromPeriod = Context.Request.Query["fromPeriod"],
+                                                   toPeriod = Context.Request.Query["toPeriod"],
                                                })" class="pagination-next" aria-label="Next"></a>
             </li>
         </ul>
     </nav>
 }
 
+@section Styles{
+    <environment names="Development,Staging,Production">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="~/lib/bootstrap-material-datepicker/css/datepicker.css" />
+    </environment>
+}
 
-@*@section Scripts{
+@section Scripts{
     <partial name="_ValidationScriptsPartial" />
-    <script src="~/js/admin/climate-stations/climate-stations.js"></script>
-    <script>
-        (function (climateDbApp) {
-            climateDbApp.climateStationsConfig = {
-                insertStationFormId: '#insert-station-form',
-                insertStationFormSubmitButtonId: '#insert-station-button',
-            }
+    <script src="~/lib/moment.js/moment.js"></script>
+    <script src="~/lib/bootstrap-material-datepicker/js/datepicker.js"></script>
+    @*<script src="~/js/admin/climate-stations/climate-stations.js"></script>*@
+    @*<script>
+            (function (climateDbApp) {
+                climateDbApp.climateStationsConfig = {
+                    insertStationFormId: '#insert-station-form',
+                    insertStationFormSubmitButtonId: '#insert-station-button',
+                }
 
-            climateDbApp.init();
-        })(window.climateDbApp);
+                climateDbApp.init();
+            })(window.climateDbApp);
+        </script>*@
+    <script>
+        $('.datepicker').bootstrapMaterialDatePicker({
+            weekStart: 1, time: false, format: "MM-YYYY", clearButton: false, monthPicker: true });
     </script>
-}*@
+}

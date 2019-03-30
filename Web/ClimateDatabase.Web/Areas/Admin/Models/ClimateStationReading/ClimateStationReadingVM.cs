@@ -4,10 +4,11 @@
 
     using ClimateDatabase.Common.Mapping;
     using ClimateDatabase.Data.Models;
+    using ClimateDatabase.Web.Areas.Admin.Models.ClimateStation;
 
     public class ClimateStationReadingVM : IMapFrom<ClimateStationReading>
     {
-        public string ClimateStationId { get; set; }
+        public ClimateStationVM ClimateStation { get; set; }
 
         public int Month { get; set; }
 
