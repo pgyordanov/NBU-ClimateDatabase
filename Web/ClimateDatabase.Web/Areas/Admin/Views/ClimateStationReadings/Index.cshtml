@@ -63,7 +63,7 @@
     </form>
 </div>
 
-@*<partial name="_InsertClimateStation" model="new ClimateDatabase.Web.Areas.Admin.Models.ClimateStation.InsertClimateStationVM()" />*@
+<partial name="_InsertClimateStationReading" model="new ClimateDatabase.Web.Areas.Admin.Models.ClimateStationReading.InsertClimateStationReadingVM()" />
 
 <div class="panel panel-white">
     <div class="panel-body">
@@ -171,21 +171,23 @@
 
 @section Scripts{
     <partial name="_ValidationScriptsPartial" />
+    <script src="~/lib/typeahead/typeahead.bundle.js"></script>
     <script src="~/lib/moment.js/moment.js"></script>
     <script src="~/lib/bootstrap-material-datepicker/js/datepicker.js"></script>
-    @*<script src="~/js/admin/climate-stations/climate-stations.js"></script>*@
-    @*<script>
-            (function (climateDbApp) {
-                climateDbApp.climateStationsConfig = {
-                    insertStationFormId: '#insert-station-form',
-                    insertStationFormSubmitButtonId: '#insert-station-button',
-                }
-
-                climateDbApp.init();
-            })(window.climateDbApp);
-        </script>*@
+    <script src="~/js/admin/climate-station-readings/climate-station-readings.js"></script>
     <script>
+        (function (climateDbApp) {
+            climateDbApp.climateStationReadingsConfig = {
+                getStationsUrl: '@Url.Action("GetClimateStations", "ClimateStations", new { name = Html.Raw("QUERY") })',
+                insertReadingFormId: '#insert-reading-form',
+                insertReadingFormSubmitButtonId: '#insert-reading-button',
+            }
+
+            climateDbApp.init();
+        })(window.climateDbApp);
+
         $('.datepicker').bootstrapMaterialDatePicker({
-            weekStart: 1, time: false, format: "MM-YYYY", clearButton: false, monthPicker: true });
+            weekStart: 1, time: false, format: "MM-YYYY", clearButton: false, monthPicker: true
+        });
     </script>
 }

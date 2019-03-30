@@ -7,7 +7,7 @@
 
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
-
+    using ClimateDatabase.Common.Settings;
     using ClimateDatabase.Data.Models;
     using ClimateDatabase.Services.Contracts;
     using ClimateDatabase.Web.Areas.Admin.Controllers.Base;
@@ -15,14 +15,18 @@
     using ClimateDatabase.Web.Areas.Admin.Models.ClimateStationReading;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Options;
 
     public class ClimateStationReadingsController : EntityListController
     {
+        private IOptions<ApplicationSettings> options;
         private IBaseCrudService<ClimateStationReading> climateStationReadingService;
 
-        public ClimateStationReadingsController(IBaseCrudService<ClimateStationReading> climateStationReadingService)
+
+        public ClimateStationReadingsController(IBaseCrudService<ClimateStationReading> climateStationReadingService, IOptions<ApplicationSettings> options)
         {
             this.climateStationReadingService = climateStationReadingService;
+            this.options = options;
         }
 
         [HttpGet]
@@ -44,24 +48,24 @@
             if (!string.IsNullOrWhiteSpace(fromPeriod))
             {
                 DateTime period;
-                bool result = DateTime.TryParseExact(fromPeriod, "MM-YYYY", CultureInfo.InvariantCulture, DateTimeStyles.None, out period);
+                bool result = DateTime.TryParseExact(fromPeriod, "MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out period);
 
                 if (result)
                 {
                     climateStationReadingQuery = climateStationReadingQuery
-                        .Where(a => DateTime.ParseExact(a.Month + "-" + a.Year, "MM-YYYY", CultureInfo.InvariantCulture, DateTimeStyles.None) >= period);
+                        .Where(a => DateTime.ParseExact(a.Month + "-" + a.Year, "MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None) >= period);
                 }
             }
 
             if (!string.IsNullOrWhiteSpace(toPeriod))
             {
                 DateTime period;
-                bool result = DateTime.TryParseExact(toPeriod, "MM-YYYY", CultureInfo.InvariantCulture, DateTimeStyles.None, out period);
+                bool result = DateTime.TryParseExact(toPeriod, "MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out period);
 
                 if (result)
                 {
                     climateStationReadingQuery = climateStationReadingQuery
-                        .Where(a => DateTime.ParseExact(a.Month + "-" + a.Year, "MM-YYYY", CultureInfo.InvariantCulture, DateTimeStyles.None) <= period);
+                        .Where(a => DateTime.ParseExact(a.Month + "-" + a.Year, "MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None) <= period);
                 }
             }
 
@@ -96,26 +100,48 @@
         //    return this.View();
         //}
 
-        //[HttpPost]
-        //[Route("admin/climate-stations/insert")]
-        //public async Task<IActionResult> InsertClimateStation(InsertClimateStationVM model)
-        //{
-        //    if (!this.ModelState.IsValid)
-        //    {
-        //        this.AddAlert(false, $"An error has occured while creating the station. Please try again.");
-        //        return this.RedirectToAction("Index", new PaginationVM { ShowPage = 1, PageSize = 20 });
-        //    }
+        [HttpPost]
+        [Route("admin/climate-station-readings/insert")]
+        public async Task<IActionResult> InsertClimateStationReading(InsertClimateStationReadingVM model)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                this.AddAlert(false, $"An error has occured while creating the station reading. Please try again.");
+                return this.RedirectToAction("Index", new PaginationVM { ShowPage = 1, PageSize = 20 });
+            }
 
-        //    var climateStation = Mapper.Map<ClimateStation>(model);
+            DateTime fromPeriod;
+            bool resultFromPeriod = DateTime.TryParseExact(model.FromDate, "MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out fromPeriod);
 
-        //    climateStation.CreatedOn = DateTime.Now;
-        //    climateStation.ModifiedOn = DateTime.Now;
+            DateTime toPeriod;
+            bool resultToPeriod = DateTime.TryParseExact(model.ToDate, "MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out toPeriod);
 
-        //    await this.climateStationReadingService.Create(climateStation);
+            if (fromPeriod.Year < this.options.Value.ReadingsStartYear || toPeriod.Year < this.options.Value.ReadingsStartYear)
+            {
+                this.AddAlert(false, $"Cannot insert readings prior to 01/{this.options.Value.ReadingsStartYear}. Please try again.");
+                return this.RedirectToAction("Index", new PaginationVM { ShowPage = 1, PageSize = 20 });
+            }
 
-        //    this.AddAlert(true, $"Station {model.Name} was successfully inserted.");
+            DateTime currentPeriod = fromPeriod;
+            while (currentPeriod <= toPeriod)
+            {
+                var climateStationReading = Mapper.Map<ClimateStationReading>(model);
 
-        //    return this.RedirectToAction("Index", new PaginationVM { ShowPage = 1, PageSize = 20 });
-        //}
+                climateStationReading.Year = currentPeriod.Year;
+                climateStationReading.Month = currentPeriod.Month;
+                climateStationReading.ClimateStationIntervalWeight = 0;
+
+                climateStationReading.CreatedOn = DateTime.Now;
+                climateStationReading.ModifiedOn = DateTime.Now;
+
+                await this.climateStationReadingService.Create(climateStationReading);
+
+                currentPeriod = currentPeriod.AddMonths(1);
+            }
+
+            this.AddAlert(true, $"Reading was successfully inserted.");
+
+            return this.RedirectToAction("Index", new PaginationVM { ShowPage = 1, PageSize = 20 });
+        }
     }
 }

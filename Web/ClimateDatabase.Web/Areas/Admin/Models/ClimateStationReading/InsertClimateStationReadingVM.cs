@@ -8,22 +8,57 @@
 
     public class InsertClimateStationReadingVM : IMapFrom<ClimateStationReading>
     {
+        public string ClimateStationName { get; set; }
+
         [Required]
         public string ClimateStationId { get; set; }
 
         [Required]
-        [Range(1, 12)]
-        public int FromMonth { get; set; }
+        public string FromDate { get; set; }
 
         [Required]
-        //[Range(0, DateTime.Now.Year)]
-        public int FromYear { get; set; }
+        public string ToDate { get; set; }
 
         [Required]
-        [Range(1, 12)]
-        public int ToMonth { get; set; }
+        public double? AverageTemperature { get; set; }
 
         [Required]
-        public int ToYear { get; set; }
+        public double? TemperatureDeviation { get; set; }
+
+        [Required]
+        public double? MaximumTemperature { get; set; }
+
+        [Required]
+        public int? MaximumTemperatureDay { get; set; }
+
+        [Required]
+        public double? MinimumTemperature { get; set; }
+
+        [Required]
+        public int? MinimumTemperatureDay { get; set; }
+
+        [Required]
+        public double? RainSum { get; set; }
+
+        [Required]
+        public double? RainRatio { get; set; }
+
+        [Required]
+        public double? MaximumRain { get; set; }
+
+        [Required]
+        public int? MaximumRainDay { get; set; }
+
+        [Required]
+        public int? DaysWithRainMoreThan1mm { get; set; }
+
+        [Required]
+        public int? DaysWithRainMoreThan10mm { get; set; }
+
+        [Required]
+        public int? DaysWithWindFasterThan14ms { get; set; }
+
+        [Required]
+        public int? DaysWithThunder { get; set; }
     }
 }
