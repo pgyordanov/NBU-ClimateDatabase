@@ -46,6 +46,7 @@
                     var scaledWeight = Math.Round(reading.ClimateStation.Weight.Value / roundedSum, 2, MidpointRounding.AwayFromZero);
                     reading.ClimateStationIntervalWeight = scaledWeight;
 
+                    reading.ModifiedOn = DateTime.Now;
                     await this.climateStationReadingService.Update(reading);
                 }
             }

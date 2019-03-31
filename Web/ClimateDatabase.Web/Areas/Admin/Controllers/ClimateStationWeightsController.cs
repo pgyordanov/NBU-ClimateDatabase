@@ -106,6 +106,8 @@
                         stationsForScaling.Add(stationDo);
 
                         stationDo.Weight = station.Weight;
+                        stationDo.ModifiedOn = DateTime.Now;
+
                         await this.climateStationService.Update(stationDo);
                     }
                 }
@@ -115,6 +117,8 @@
             {
                 await this.weightManager.ScaleStationGlobalWeight(stationDo);
             }
+
+            this.AddAlert(true, $"Global weights were successfully set Monthly weights have been scaled for the updated stations.");
 
             return this.RedirectToAction("GlobalWeights");
         }
