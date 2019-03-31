@@ -60,6 +60,7 @@
                 <thead>
                     <tr>
                         <th>Name</th>
+                        <th>Global weight</th>
                         <th>Created on</th>
                         <th>Last modified on</th>
                         @*<th></th>*@
@@ -70,14 +71,15 @@
                     @foreach (var station in Model.ClimateStations)
                     {
 
-                        <tr>
-                            <td>@station.Name</td>
-                            <td>@station.CreatedOn.ToString("dd/MM/yyyy HH:mm")</td>
-                            <td>@station.ModifiedOn.ToString("dd/MM/yyyy HH:mm")</td>
-                            @*<td>
-                                    <a asp-area="Admin" asp-controller="ClimateStations" asp-action="ClimateStation" asp-route-climateStationId="@station.Id">Details</a>
-                                </td>*@
-                        </tr>
+                    <tr>
+                        <td>@station.Name</td>
+                        <td>@station.Weight</td>
+                        <td>@station.CreatedOn.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td>@station.ModifiedOn.ToString("dd/MM/yyyy HH:mm")</td>
+                        @*<td>
+            <a asp-area="Admin" asp-controller="ClimateStations" asp-action="ClimateStation" asp-route-climateStationId="@station.Id">Details</a>
+        </td>*@
+                    </tr>
                     }
 
                 </tbody>

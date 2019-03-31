@@ -53,7 +53,7 @@
                 if (result)
                 {
                     climateStationReadingQuery = climateStationReadingQuery
-                        .Where(a => DateTime.ParseExact(a.Month + "-" + a.Year, "MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None) >= period);
+                        .Where(a => DateTime.ParseExact(a.Month.ToString("00") + "-" + a.Year, "MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None) >= period);
                 }
             }
 
@@ -65,11 +65,11 @@
                 if (result)
                 {
                     climateStationReadingQuery = climateStationReadingQuery
-                        .Where(a => DateTime.ParseExact(a.Month + "-" + a.Year, "MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None) <= period);
+                        .Where(a => DateTime.ParseExact(a.Month.ToString("00") + "-" + a.Year, "MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None) <= period);
                 }
             }
 
-            climateStationReadingQuery = climateStationReadingQuery.OrderByDescending(u => u.ClimateStation.Name);
+            climateStationReadingQuery = climateStationReadingQuery.OrderBy(u => u.Year).ThenBy(u => u.Month).ThenBy(u => u.ClimateStation.Name);
 
             var paginatedReadings = this.PaginateList<ClimateStationReadingVM>(pagination, climateStationReadingQuery.ProjectTo<ClimateStationReadingVM>()).ToList();
 
@@ -127,6 +127,7 @@
             {
                 var climateStationReading = Mapper.Map<ClimateStationReading>(model);
 
+                climateStationReading.ClimateStation = null;
                 climateStationReading.Year = currentPeriod.Year;
                 climateStationReading.Month = currentPeriod.Month;
                 climateStationReading.ClimateStationIntervalWeight = 0;

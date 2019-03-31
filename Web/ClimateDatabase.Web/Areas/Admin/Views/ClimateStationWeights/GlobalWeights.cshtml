@@ -1,0 +1,53 @@
+﻿@model ClimateDatabase.Web.Areas.Admin.Models.ClimateStationWeight.ClimateStationWeightListVM
+
+@{
+    ViewBag.Title = "Edit global climate station weights";
+    Layout = "_Layout";
+    ViewData["global-active"] = "active";
+}
+
+<partial name="_StatusMessage" model="ViewBag.Alert" />
+
+<div class="page-intro">
+    <h2>Edit global climate station weights</h2>
+</div>
+
+<div class="alert alert-alt alert-danger mb alert-large alert-validation alert-dismissable fade in" role="alert" asp-validation-summary="All">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
+</div>
+
+<partial name="_Navigation" view-data="ViewData" />
+
+<div class="panel panel-white station-weights">
+    <div class="panel-body">
+        <form method="post" asp-area="Admin" asp-controller="ClimateStationWeights" asp-action="GlobalWeights">
+
+            @for (int i = 0; i < Model.ClimateStationWeights.Count; i++)
+            {
+                <div class="form-group row station">
+                    <div class="col-xs-12">
+                        <input type="hidden" asp-for="ClimateStationWeights[i].Id" />
+                        <input type="hidden" asp-for="ClimateStationWeights[i].Name" />
+                        <div class="col-xs-6 station-name text-center">@(Model.ClimateStationWeights[i].Name)</div>
+                        <div class="col-xs-6 station-weight">
+                            <div class="md-input">
+                                <input asp-for="ClimateStationWeights[i].Weight" type="text" class="md-input-control" />
+                            </div>
+                            <span asp-validation-for="ClimateStationWeights[i].Weight" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div class="form-group row mt-2x text-right">
+                <button type="submit" class="btn btn-waves btn-primary waves-effect waves-light">
+                    Save weights
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}

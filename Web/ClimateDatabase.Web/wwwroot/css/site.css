@@ -94,11 +94,11 @@ input:-webkit-autofill {
     margin-left: 0.7rem;
 }
 
-.guest-container .alert.validation-summary-valid, body.main-body .alert.validation-summary-valid {
+.guest-container .alert.validation-summary-valid, body.main-body .alert.validation-summary-valid, body.admin-body .alert.validation-summary-valid {
     display: none;
 }
 
-.guest-container .alert > ul, body.main-body .alert > ul {
+.guest-container .alert > ul, body.main-body .alert > ul, body.admin-body .alert > ul {
     padding: 15px;
     list-style: none;
 }
@@ -288,3 +288,20 @@ span.twitter-typeahead {
 textarea {
     resize: vertical;
 }
+
+.station-weights .station .station-name {
+    font-size: 1.8rem;
+    padding-bottom: 1rem;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.station-weights .station .station-weight {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+    .station-weights .station .station-weight input {
+        padding-top: 0;
+        padding-bottom: 1rem;
+    }

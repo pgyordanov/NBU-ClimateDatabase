@@ -25,6 +25,7 @@
     using ClimateDatabase.Services.Implementation;
     using ClimateDatabase.Services.Messaging.EmailSender;
     using ClimateDatabase.Web.ViewModels.Account;
+    using ClimateDatabase.Services.WeightManager;
 
     public class Startup
     {
@@ -108,6 +109,7 @@
 
             // Application services
             services.AddTransient<IEmailSender, EmailSender>();
+            services.AddTransient<WeightManager>();
             services.AddScoped(typeof(ICrudService<>), typeof(CrudService<>));
             services.AddScoped(typeof(IBaseCrudService<>), typeof(BaseCrudService<>));
 

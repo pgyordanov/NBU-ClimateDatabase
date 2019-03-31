@@ -7,5 +7,7 @@
         public string Version { get; set; }
 
         public int ReadingsStartYear { get; set; }
+
+        public double WeightSumErrorTreshold { get; set; }
     }
 }

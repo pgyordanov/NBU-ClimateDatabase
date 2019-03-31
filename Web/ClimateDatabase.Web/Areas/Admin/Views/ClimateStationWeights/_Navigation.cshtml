@@ -1,0 +1,20 @@
+﻿<div class="row">
+    <div class="col-xs-12 col-sm-6">
+        <a asp-area="Admin" asp-controller="ClimateStationWeights" asp-action="GlobalWeights">
+            <div class="widget user-profile-widget @ViewData["global-active"]">
+                <div class="widget-body">
+                    Global weights
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-xs-12 col-sm-6">
+        <a asp-area="Admin" asp-controller="ClimateStationWeights" asp-action="PeriodWeights">
+            <div class="widget user-profile-widget @ViewData["period-active"]">
+                <div class="widget-body">
+                    Weights for period
+                </div>
+            </div>
+        </a>
+    </div>
+</div>

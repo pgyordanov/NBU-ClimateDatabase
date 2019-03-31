@@ -83,6 +83,7 @@
 
             var climateStation = Mapper.Map<ClimateStation>(model);
 
+            climateStation.Weight = 0;
             climateStation.CreatedOn = DateTime.Now;
             climateStation.ModifiedOn = DateTime.Now;
 

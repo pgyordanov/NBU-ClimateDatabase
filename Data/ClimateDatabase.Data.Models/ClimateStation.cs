@@ -12,6 +12,9 @@
             this.Id = Guid.NewGuid().ToString();
         }
 
+        [Range(0, 1)]
+        public double? Weight { get; set; }
+
         public virtual ICollection<ClimateStationReading> Readings { get; set; }
     }
 }
