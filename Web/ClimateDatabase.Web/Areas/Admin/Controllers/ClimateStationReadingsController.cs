@@ -88,17 +88,68 @@
             return this.View(climateStationReadingsModel);
         }
 
-        //[HttpGet]
-        //[Route("admin/climate-stations/{climateStationId}")]
-        //public IActionResult ClimateStation(string climateStationId)
-        //{
-        //    if (string.IsNullOrWhiteSpace(climateStationId))
-        //    {
-        //        return this.NotFound($"invalid climate statation id");
-        //    }
+        [HttpGet]
+        [Route("admin/climate-station-readings/{climateStationId}/{month}/{year}")]
+        public IActionResult ClimateStationReading(string climateStationId, int month, int year)
+        {
+            if (this.HasAlert)
+            {
+                this.SetAlertModel();
+            }
 
-        //    return this.View();
-        //}
+            if (string.IsNullOrWhiteSpace(climateStationId))
+            {
+                return this.NotFound($"invalid climate statation id");
+            }
+
+            var climateStationReading = this.climateStationReadingService.GetAll()
+                .Include(r => r.ClimateStation)
+                .FirstOrDefault(r => r.ClimateStationId == climateStationId && r.Month == month && r.Year == year);
+
+            if (climateStationReading == null)
+            {
+                return this.NotFound($"reading not found");
+            }
+
+            var climateStationReadingModel = Mapper.Map<ClimateStationReadingFullVM>(climateStationReading);
+
+            return this.View(climateStationReadingModel);
+        }
+
+
+        [HttpPost]
+        [Route("admin/climate-station-readings/{climateStationId}/{month}/{year}")]
+        public async Task<IActionResult> ClimateStationReading(ClimateStationReadingFullVM model)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                this.AddAlert(false, $"An error has occured while updating station reading. Please try again.");
+                return this.View(model);
+            }
+
+            var climateStationReading = await this.climateStationReadingService.Get(model.ClimateStationId, model.Year, model.Month);
+
+            climateStationReading.AverageTemperature = model.AverageTemperature;
+            climateStationReading.MaximumTemperature = model.MaximumTemperature;
+            climateStationReading.MaximumTemperatureDay = model.MaximumTemperatureDay;
+            climateStationReading.MinimumTemperature = model.MinimumTemperature;
+            climateStationReading.MinimumTemperatureDay = model.MinimumTemperatureDay;
+            climateStationReading.RainSum = model.RainSum;
+            climateStationReading.RainRatio = model.RainRatio;
+            climateStationReading.MaximumRain = model.MaximumRain;
+            climateStationReading.MaximumRainDay = model.MaximumRainDay;
+            climateStationReading.DaysWithRainMoreThan1mm = model.DaysWithRainMoreThan1mm;
+            climateStationReading.DaysWithRainMoreThan10mm = model.DaysWithRainMoreThan10mm;
+            climateStationReading.DaysWithThunder = model.DaysWithThunder;
+            climateStationReading.DaysWithWindFasterThan14ms = climateStationReading.DaysWithWindFasterThan14ms;
+
+            climateStationReading.ModifiedOn = DateTime.Now;
+
+            await this.climateStationReadingService.Update(climateStationReading);
+
+            this.AddAlert(true, "Successfully updated climate station reading");
+            return this.RedirectToAction("ClimateStationReading", new {climateStationId = model.ClimateStationId, month = model.Month, year = model.Year });
+        }
 
         [HttpPost]
         [Route("admin/climate-station-readings/insert")]

@@ -4,9 +4,19 @@
     ViewBag.Title = "Edit global climate station weights";
     Layout = "_Layout";
     ViewData["global-active"] = "active";
+    var ConfirmationModalModel = new ClimateDatabase.Web.Areas.Admin.Models.ModalVM
+    {
+        ModalId = "station-modal",
+        ModalTitle = "Confirmation needed",
+        ModalMessage = $"Are you sure you want to continue?"
+         + "If there are changes to the global weights or 'Recalculate period weights' option is set,"
+         + "station weights for periods will be scaled according to their global weights",
+        SubmitButtonText = "Confirm",
+    };
 }
 
 <partial name="_StatusMessage" model="ViewBag.Alert" />
+<partial name="_ConfirmationModal" model="ConfirmationModalModel" />
 
 <div class="page-intro">
     <h2>Edit global climate station weights</h2>
@@ -20,7 +30,7 @@
 
 <div class="panel panel-white station-weights">
     <div class="panel-body">
-        <form method="post" asp-area="Admin" asp-controller="ClimateStationWeights" asp-action="GlobalWeights">
+        <form method="post" id="periodWeightsForm" asp-area="Admin" asp-controller="ClimateStationWeights" asp-action="GlobalWeights">
 
             @for (int i = 0; i < Model.ClimateStationWeights.Count; i++)
             {
@@ -40,7 +50,11 @@
             }
 
             <div class="form-group row mt-2x text-right">
-                <button type="submit" class="btn btn-waves btn-primary waves-effect waves-light">
+                <div class="md-checkbox md-checkbox-primary md-checkbox-inline">
+                    <input type="checkbox" asp-for="RecalculatePeriodWeights">
+                    <label for="RecalculatePeriodWeights">Recalculate period weights</label>
+                </div>
+                <button type="button" class="btn btn-waves btn-primary waves-effect waves-light"  data-form="#periodWeightsForm" data-toggle="modal" data-target="#@ConfirmationModalModel.ModalId">
                     Save weights
                 </button>
             </div>

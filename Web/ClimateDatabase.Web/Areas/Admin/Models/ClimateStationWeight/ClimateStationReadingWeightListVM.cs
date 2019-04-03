@@ -5,10 +5,8 @@
     using ClimateDatabase.Data.Models;
     using ClimateDatabase.Web.Areas.Admin.Models.Base;
 
-    public class ClimateStationWeightListVM
+    public class ClimateStationReadingWeightListVM
     {
-        public List<ClimateStationWeightVM> ClimateStationWeights { get; set; }
-
-        public bool RecalculatePeriodWeights { get; set; }
+       public List<ClimateStationReadingWeightVM> ClimateStationReadingWeights { get; set; }
     }
 }
