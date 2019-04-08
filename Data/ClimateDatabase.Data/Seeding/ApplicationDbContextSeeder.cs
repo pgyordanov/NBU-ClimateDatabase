@@ -154,6 +154,8 @@ namespace ClimateDatabase.Data.Seeding
             {
                 for (int i = 0; i < 50; i++)
                 {
+                    
+                    
                     entities.Add(new ClimateStationReading
                     {
                         ClimateStationId = station.Id,
@@ -167,6 +169,16 @@ namespace ClimateDatabase.Data.Seeding
                         DaysWithRainMoreThan10mm = randGen.Next(0,30),
                         DaysWithThunder = randGen.Next(0,30),
                         DaysWithWindFasterThan14ms = randGen.Next(0,30),
+                        MinimumTemperature = randGen.Next(-20,15),
+                        MaximumTemperature = randGen.Next(15,60),
+                        TemperatureDeviation = randGen.NextDouble()*20,
+                        RainRatio = randGen.NextDouble()*10,
+                        RainSum = randGen.NextDouble()*50,
+                        MaximumRain = randGen.NextDouble()*100,
+                        MaximumRainDay = randGen.Next(10,50),
+                        MaximumTemperatureDay = randGen.Next(0,100),
+                        MinimumTemperatureDay = randGen.Next(0,100),
+                     
                     });
                 }
             }
