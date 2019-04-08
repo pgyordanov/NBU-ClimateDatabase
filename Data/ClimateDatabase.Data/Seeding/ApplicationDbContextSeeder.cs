@@ -1,4 +1,7 @@
-﻿namespace ClimateDatabase.Data.Seeding
+﻿using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+
+namespace ClimateDatabase.Data.Seeding
 {
     using System;
     using System.Linq;
@@ -47,6 +50,8 @@
 
             SeedRoles(roleManager);
             //SeedAdmin(userManager);
+            SeedStations(dbContext);
+            SeedStationReadings(dbContext);
         }
 
         private static void SeedAdmin(UserManager<ApplicationUser> userManager)
@@ -96,6 +101,78 @@
                     throw new Exception(string.Join(Environment.NewLine, result.Errors.Select(e => e.Description)));
                 }
             }
+        }
+
+
+        private static void SeedStations(ApplicationDbContext context)
+        {
+            if(context.ClimateStations.Any()) return;
+            
+            var stationNames = new List<string>()
+            {
+                "Vraca",
+                "Sofia",
+                "Stara Zagora",
+                "Pazardzhik",
+                "Varna",
+                "Burgas",
+                "Pernik"
+            };
+
+            var randGen = new Random();
+
+            
+            var entities = new List<ClimateStation>();
+
+            for (int i = 0; i < 100; i++)
+            {
+               entities.Add(new ClimateStation
+                {
+                    Name = stationNames[randGen.Next(0,stationNames.Count-1)],
+                    Weight = randGen.NextDouble()*100,
+                    CreatedOn = DateTime.Now.AddDays(randGen.Next(-1000, -1)),
+                    ModifiedOn = DateTime.Now,
+                    Readings = new List<ClimateStationReading>(),
+                });
+                
+                
+            }
+            
+            context.AddRange(entities);
+            context.SaveChanges();
+        }
+
+        private static void SeedStationReadings(ApplicationDbContext context)
+        {
+            if (context.ClimateStationReadings.Any()) return;
+            
+            var randGen = new Random();
+            
+            var entities = new List<ClimateStationReading>();
+
+            foreach (var station in context.ClimateStations.ToList())
+            {
+                for (int i = 0; i < 50; i++)
+                {
+                    entities.Add(new ClimateStationReading
+                    {
+                        ClimateStationId = station.Id,
+                        ClimateStation = station,
+                        AverageTemperature = randGen.NextDouble()*40,
+                        ClimateStationIntervalWeight = randGen.NextDouble()*20,
+                        CreatedOn = DateTime.Now.AddMonths(-i),
+                        Month = DateTime.Now.AddMonths(-i).Month,
+                        Year = DateTime.Now.AddMonths(-i).Year,
+                        DaysWithRainMoreThan1mm = randGen.Next(0,30),
+                        DaysWithRainMoreThan10mm = randGen.Next(0,30),
+                        DaysWithThunder = randGen.Next(0,30),
+                        DaysWithWindFasterThan14ms = randGen.Next(0,30),
+                    });
+                }
+            }
+            
+            context.AddRange(entities);
+            context.SaveChanges();
         }
     }
 }
