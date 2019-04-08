@@ -1,0 +1,153 @@
+@inject IOptions<ApplicationSettings> AppSettings
+
+@using ClimateDatabase.Common.Settings
+@using Microsoft.Extensions.Options
+@model ClimateDatabase.Web.Models.ClimateStationReadingFullVM
+
+@{
+    ViewBag.Title = Model.ClimateStation.Name + " " + Model.Month.ToString("00") + "-" + Model.Year;
+    Layout = "_Layout";
+}
+
+<partial name="_StatusMessage" model="ViewBag.Alert"/>
+
+<div class="page-intro">
+    <h2>@(Model.ClimateStation.Name + " " + Model.Month.ToString("00") + "-" + Model.Year) (@Model.ClimateStationIntervalWeight)</h2>
+</div>
+
+<div class="panel panel-white">
+    <div class="panel-body">
+        <div class="section">
+            <div class="col-xs-12 section-heading">Temperature</div>
+
+            <div class="form-group row">
+                <div class="col-xs-12 col-md-6">
+                    <div class="md-input">
+                        <label for="name" class="md-input-placeholder">Average temperature</label>
+                        <input asp-for="AverageTemperature" type="text" class="md-input-control" disabled="disabled">
+                    </div>
+                    <span asp-validation-for="AverageTemperature" class="text-danger"></span>
+                </div>
+                <div class="col-xs-12 col-md-6">
+                    <div class="md-input">
+                        <label for="name" class="md-input-placeholder">Temperature deviation</label>
+                        <input asp-for="TemperatureDeviation" type="text" class="md-input-control" disabled="disabled">
+                    </div>
+                    <span asp-validation-for="TemperatureDeviation" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-xs-12 col-md-3">
+                    <div class="md-input">
+                        <label for="name" class="md-input-placeholder">Minimum temperature</label>
+                        <input asp-for="MinimumTemperature" type="text" class="md-input-control" disabled="disabled">
+                    </div>
+                    <span asp-validation-for="MinimumTemperature" class="text-danger"></span>
+                </div>
+                <div class="col-xs-12 col-md-3">
+                    <div class="md-input">
+                        <label for="name" class="md-input-placeholder">Minimum temperature day</label>
+                        <input asp-for="MinimumTemperatureDay" type="text" class="md-input-control" disabled="disabled">
+                    </div>
+                    <span asp-validation-for="MinimumTemperatureDay" class="text-danger"></span>
+                </div>
+                <div class="col-xs-12 col-md-3">
+                    <div class="md-input">
+                        <label for="name" class="md-input-placeholder">Maximum temperature</label>
+                        <input asp-for="MaximumTemperature" type="text" class="md-input-control" disabled="disabled">
+                    </div>
+                    <span asp-validation-for="MaximumTemperature" class="text-danger"></span>
+                </div>
+                <div class="col-xs-12 col-md-3">
+                    <div class="md-input">
+                        <label for="name" class="md-input-placeholder">Maximum temperature day</label>
+                        <input asp-for="MaximumTemperatureDay" type="text" class="md-input-control" disabled="disabled">
+                    </div>
+                    <span asp-validation-for="MaximumTemperatureDay" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="col-xs-12 section-heading">Rain</div>
+
+            <div class="form-group row">
+                <div class="col-xs-12 col-md-6">
+                    <div class="md-input">
+                        <label for="name" class="md-input-placeholder">Rain sum</label>
+                        <input asp-for="RainSum" type="text" class="md-input-control" disabled="disabled">
+                    </div>
+                    <span asp-validation-for="RainSum" class="text-danger"></span>
+                </div>
+                <div class="col-xs-12 col-md-6">
+                    <div class="md-input">
+                        <label for="name" class="md-input-placeholder">Rain Ratio</label>
+                        <input asp-for="RainRatio" type="text" class="md-input-control" disabled="disabled">
+                    </div>
+                    <span asp-validation-for="RainRatio" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-xs-12 col-md-3">
+                    <div class="md-input">
+                        <label for="name" class="md-input-placeholder">Maximum rain</label>
+                        <input asp-for="MaximumRain" type="text" class="md-input-control" disabled="disabled">
+                    </div>
+                    <span asp-validation-for="MaximumRain" class="text-danger"></span>
+                </div>
+                <div class="col-xs-12 col-md-3">
+                    <div class="md-input">
+                        <label for="name" class="md-input-placeholder">Maximum rain day</label>
+                        <input asp-for="MaximumRainDay" type="text" class="md-input-control" disabled="disabled">
+                    </div>
+                    <span asp-validation-for="MaximumRainDay" class="text-danger"></span>
+                </div>
+                <div class="col-xs-12 col-md-3">
+                    <div class="md-input">
+                        <label for="name" class="md-input-placeholder">Days with rain more than 1mm</label>
+                        <input asp-for="DaysWithRainMoreThan1mm" type="text" class="md-input-control" disabled="disabled">
+                    </div>
+                    <span asp-validation-for="DaysWithRainMoreThan1mm" class="text-danger"></span>
+                </div>
+                <div class="col-xs-12 col-md-3">
+                    <div class="md-input">
+                        <label for="name" class="md-input-placeholder">Days with rain more than 10mm</label>
+                        <input asp-for="DaysWithRainMoreThan10mm" type="text" class="md-input-control" disabled="disabled">
+                    </div>
+                    <span asp-validation-for="DaysWithRainMoreThan10mm" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="col-xs-12 section-heading">Storms</div>
+
+            <div class="form-group row">
+                <div class="col-xs-12 col-md-6">
+                    <div class="md-input">
+                        <label for="name" class="md-input-placeholder">Days with wind faster than 14ms</label>
+                        <input asp-for="DaysWithWindFasterThan14ms" type="text" class="md-input-control" disabled="disabled">
+                    </div>
+                    <span asp-validation-for="DaysWithWindFasterThan14ms" class="text-danger"></span>
+                </div>
+                <div class="col-xs-12 col-md-6">
+                    <div class="md-input">
+                        <label for="name" class="md-input-placeholder">Days with thunder</label>
+                        <input asp-for="DaysWithThunder" type="text" class="md-input-control" disabled="disabled">
+                    </div>
+                    <span asp-validation-for="DaysWithThunder" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="text-right">
+                <button type="submit" class="btn btn-waves btn-primary waves-effect waves-light" onclick="JavaScript:window.history.back(1);return false;">
+                    Back
+                </button>
+
+            </div>
+        </div>
+    </div>
+</div>
