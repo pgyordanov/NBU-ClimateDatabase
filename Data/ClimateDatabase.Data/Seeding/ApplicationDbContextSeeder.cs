@@ -129,7 +129,7 @@ namespace ClimateDatabase.Data.Seeding
                entities.Add(new ClimateStation
                 {
                     Name = stationNames[randGen.Next(0,stationNames.Count-1)],
-                    Weight = randGen.NextDouble()*100,
+                    Weight = 0,
                     CreatedOn = DateTime.Now.AddDays(randGen.Next(-1000, -1)),
                     ModifiedOn = DateTime.Now,
                     Readings = new List<ClimateStationReading>(),
@@ -159,7 +159,7 @@ namespace ClimateDatabase.Data.Seeding
                         ClimateStationId = station.Id,
                         ClimateStation = station,
                         AverageTemperature = randGen.NextDouble()*40,
-                        ClimateStationIntervalWeight = randGen.NextDouble()*20,
+                        ClimateStationIntervalWeight = 0,
                         CreatedOn = DateTime.Now.AddMonths(-i),
                         Month = DateTime.Now.AddMonths(-i).Month,
                         Year = DateTime.Now.AddMonths(-i).Year,
