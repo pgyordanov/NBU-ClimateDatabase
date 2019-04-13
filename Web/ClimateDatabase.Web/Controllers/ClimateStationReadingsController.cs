@@ -89,7 +89,7 @@ namespace ClimateDatabase.Web.Controllers
         }
 
         [HttpGet]
-        [Route("/readings/{climateStationId}/{climateStationId}/{month}/{year}")]
+        [Route("/readings/{climateStationId}/{month}/{year}")]
         public IActionResult ClimateStationReading(string climateStationId, int month, int year)
         {
             if (HasAlert) SetAlertModel();
