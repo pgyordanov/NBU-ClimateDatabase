@@ -118,24 +118,18 @@
                 "Pernik"
             };
 
-            var randGen = new Random();
-
-            var entities = new List<ClimateStation>();
-
-            for (int i = 0; i < 100; i++)
+            foreach (var stationName in stationNames)
             {
-                entities.Add(item: new ClimateStation
+                context.ClimateStations.Add(new ClimateStation
                 {
-                    Name = stationNames[randGen.Next(0, stationNames.Count - 1)],
+                    Name = stationName,
                     Weight = 0,
-                    CreatedOn = DateTime.Now.AddDays(randGen.Next(-1000, -1)),
+                    CreatedOn = DateTime.Now.AddYears(-2),
                     ModifiedOn = DateTime.Now,
                     Readings = new List<ClimateStationReading>()
                 });
             }
 
-            ;
-            context.AddRange(entities);
             context.SaveChanges();
         }
 
@@ -148,17 +142,16 @@
 
             var randGen = new Random();
 
-            var entities = new List<ClimateStationReading>();
-
-            foreach (var station in context.ClimateStations.ToList())
+            List<ClimateStation> climateStations = context.ClimateStations.ToList();
+            foreach (var station in climateStations)
             {
-                for (int i = 0; i < 50; i++)
+                for (int i = 1; i <= 6; i++)
                 {
-                    entities.Add(new ClimateStationReading
+                    context.ClimateStationReadings.Add(new ClimateStationReading
                     {
                         ClimateStationId = station.Id,
                         ClimateStation = station,
-                        AverageTemperature = randGen.NextDouble() * 40,
+                        AverageTemperature = randGen.Next(-10, 35),
                         ClimateStationIntervalWeight = 0,
                         CreatedOn = DateTime.Now.AddMonths(-i),
                         Month = DateTime.Now.AddMonths(-i).Month,
@@ -168,7 +161,7 @@
                         DaysWithThunder = randGen.Next(0, 30),
                         DaysWithWindFasterThan14ms = randGen.Next(0, 30),
                         MinimumTemperature = randGen.Next(-20, 15),
-                        MaximumTemperature = randGen.Next(15, 60),
+                        MaximumTemperature = randGen.Next(15, 40),
                         TemperatureDeviation = randGen.NextDouble() * 20,
                         RainRatio = randGen.NextDouble() * 10,
                         RainSum = randGen.NextDouble() * 50,
@@ -180,7 +173,6 @@
                 }
             }
 
-            context.AddRange(entities);
             context.SaveChanges();
         }
     }
