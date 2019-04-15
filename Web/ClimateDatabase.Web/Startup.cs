@@ -110,6 +110,7 @@
             // Application services
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<WeightManager>();
+            services.AddTransient<IClimateDataService, ClimateDataService>();
             services.AddScoped(typeof(ICrudService<>), typeof(CrudService<>));
             services.AddScoped(typeof(IBaseCrudService<>), typeof(BaseCrudService<>));
 
