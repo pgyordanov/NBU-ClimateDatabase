@@ -4,7 +4,6 @@
 
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Identity.UI.Services;
     using Microsoft.AspNetCore.Mvc;
@@ -26,6 +25,9 @@
     using ClimateDatabase.Services.Messaging.EmailSender;
     using ClimateDatabase.Web.ViewModels.Account;
     using ClimateDatabase.Services.WeightManager;
+    using Microsoft.Net.Http.Headers;
+    using WebApiContrib.Core.Formatter.Csv;
+    using SameSiteMode = Microsoft.AspNetCore.Http.SameSiteMode;
 
     public class Startup
     {
@@ -67,8 +69,18 @@
                 .AddSignInManager<ApplicationSignInManager<ApplicationUser>>()
                 .AddDefaultTokenProviders();
 
-            services
-                .AddMvc()
+            services.AddMvc(options =>
+                {
+                    var csvFormatterOptions = new CsvFormatterOptions()
+                    {
+                        CsvDelimiter = ",",
+                        IncludeExcelDelimiterHeader = true,
+                    };
+                    
+                    options.InputFormatters.Add(new CsvInputFormatter(csvFormatterOptions));
+                    options.OutputFormatters.Add(new CsvOutputFormatter(csvFormatterOptions));
+                    options.FormatterMappings.SetMediaTypeMappingForFormat("csv", MediaTypeHeaderValue.Parse("text/csv"));
+                })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
                 .AddRazorPagesOptions(options =>
                 {
