@@ -41,7 +41,7 @@ namespace ClimateDatabase.Services.Implementation
 
                 foreach (ClimateStationReading reading in group)
                 {
-                    double weight = reading.ClimateStationIntervalWeight / weightSum;
+                    double weight = (weightSum == 0)? 0: reading.ClimateStationIntervalWeight / weightSum;
                     double fieldValue = GetFieldValue(reading, filter.ClimateDataField.ToString()) ?? 0;
                     dataWeighted += fieldValue * weight;
                 }
