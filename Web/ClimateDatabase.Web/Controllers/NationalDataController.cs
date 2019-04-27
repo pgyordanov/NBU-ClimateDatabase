@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ClimateDatabase.Common.Extensions;
 using ClimateDatabase.Services.Contracts;
 using ClimateDatabase.Services.Models;
 using ClimateDatabase.Web.Controllers.Base;
@@ -27,7 +28,7 @@ namespace ClimateDatabase.Web.Controllers
                 .Cast<ClimateDataField>()
                 .Select(v => new SelectListItem
                 {
-                    Text = v.ToString(),
+                    Text = v.GetDescription(),
                     Value = ((int) v).ToString()
                 }).ToList();
 

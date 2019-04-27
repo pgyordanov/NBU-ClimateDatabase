@@ -1,36 +1,36 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace ClimateDatabase.Services.Models
 {
+    using System.ComponentModel;
+
     public enum ClimateDataField
     {
-        [Display(Name = "Average Temperature")]
-        AverageTemperature,
-        [Display(Name = "Temperature Deviations")]
+        [Description("Average temperature")]
+        AverageTemperature = 1,
+        [Description("Temperature deviation")]
         TemperatureDeviation,
-        [Display(Name = "Maximum Temperature")]
+        [Description("Maximum temperature")]
         MaximumTemperature,
-        [Display(Name = "Maximum Temperature Day")]
+        [Description("Maximum temperature for the day")]
         MaximumTemperatureDay,
-        [Display(Name = "Minimum Temperature")]
+        [Description("Mimimum temperature")]
         MinimumTemperature,
-        [Display(Name = "Minimum Temperature Day")]
+        [Description("Minimum temperature for the day")]
         MinimumTemperatureDay,
-        [Display(Name = "Rain Sum")]
+        [Description("Rain sum")]
         RainSum,
-        [Display(Name = "Rain Ratio")]
+        [Description("Rain ratio")]
         RainRatio,
-        [Display(Name = "Maximum Rain")]
+        [Description("Maximum rain")]
         MaximumRain,
-        [Display(Name = "Maximum Rain Day")]
+        [Description("Maximum rain day")]
         MaximumRainDay,
-        [Display(Name = "Days With Rain More Than 1mm")]
-        DaysWithRainMoreThan1Mm,
-        [Display(Name = "Days With Rain More Than 10mm")]
-        DaysWithRainMoreThan10Mm,
-        [Display(Name = "Days With Winds Faster Than 14ms")]
-        DaysWithWindFasterThan14Ms,
-        [Display(Name = "Days With Thunders")]
+        [Description("Days with more than 1mm")]
+        DaysWithRainMoreThan1mm,
+        [Description("Days with rain more than 10 mm")]
+        DaysWithRainMoreThan10mm,
+        [Description("Days with wind faster than 14 ms")]
+        DaysWithWindFasterThan14ms,
+        [Description("Days with tunder")]
         DaysWithThunder
     }
 }

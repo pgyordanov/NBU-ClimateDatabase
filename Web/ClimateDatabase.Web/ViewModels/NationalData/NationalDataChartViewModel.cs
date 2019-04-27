@@ -10,7 +10,6 @@ namespace ClimateDatabase.Web.ViewModels.NationalData
     {
         public IEnumerable<SelectListItem> climateFields { get; set; }
         
-        
         public JsonResult climateData { get; set; }
     }
 }

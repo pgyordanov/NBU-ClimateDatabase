@@ -1,3 +1,7 @@
+using ClimateDatabase.Common.Extensions;
+using ClimateDatabase.Web.ViewModels.NationalData;
+using Microsoft.AspNetCore.Mvc.Rendering;
+
 namespace ClimateDatabase.Web.Controllers
 {
     using System;
@@ -25,7 +29,7 @@ namespace ClimateDatabase.Web.Controllers
         [HttpGet]
         [Route("data.csv")]
         [Produces("text/csv")]
-        public async Task<IActionResult> GetDataAsCsv([FromQuery]ExportFilter filter)
+        public async Task<IActionResult> GetDataAsCsv([FromQuery] ExportFilter filter)
         {
             var climateDataFilter = new ClimateDataFilter()
             {
@@ -56,6 +60,38 @@ namespace ClimateDatabase.Web.Controllers
                 .ToList();
 
             return this.Ok(weightedFieldByPeriod);
+        }
+
+        public IActionResult Index()
+        {
+            IEnumerable<SelectListItem> climateFields = Enum.GetValues(typeof(ClimateDataField))
+                .Cast<ClimateDataField>()
+                .Select(
+                    v => new SelectListItem
+                    {
+                        Text = v.GetDescription(),
+                        Value = ((int)v).ToString()
+                    }).ToList();
+
+            climateFields.First().Selected = true;
+
+            IEnumerable<SelectListItem> exportTypes = Enum.GetValues(typeof(ExportType))
+                .Cast<ExportType>()
+                .Select(
+                    v => new SelectListItem
+                    {
+                        Text = v.GetDescription(),
+                        Value = ((int)v).ToString()
+                    }).ToList();
+
+            exportTypes.First(x => x.Value == ((int)ExportType.ByPeriodWeighted).ToString()).Selected = true;
+
+            return View(
+                new ExportIndexVM()
+                {
+                    ClimateFields = climateFields,
+                    ExportType = exportTypes
+                });
         }
     }
 }

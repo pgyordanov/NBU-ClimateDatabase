@@ -41,8 +41,8 @@ namespace ClimateDatabase.Services.Implementation
 
                 foreach (ClimateStationReading reading in group)
                 {
-                    double weight = (weightSum == 0)? 0: reading.ClimateStationIntervalWeight / weightSum;
-                    double fieldValue = GetFieldValue(reading, filter.ClimateDataField.ToString()) ?? 0;
+                    double weight = (weightSum == 0) ? 0 : reading.ClimateStationIntervalWeight / weightSum;
+                    double fieldValue = GetFieldValue(reading, filter.ClimateDataField.ToString());
                     dataWeighted += fieldValue * weight;
                 }
 
@@ -73,23 +73,23 @@ namespace ClimateDatabase.Services.Implementation
                 {
                     Date = $"{group.Key:yyyy-MM}"
                 };
-                
-                double weightSum = group.Sum(x => x.ClimateStationIntervalWeight);
-                IEnumerable<FieldInfo> fields = resultValue.GetType().GetFields().Where(x => x.Name != nameof(ClimateDataModelByDate.Date)).ToList();
 
-                foreach (FieldInfo field in fields)
+                double weightSum = group.Sum(x => x.ClimateStationIntervalWeight);
+                List<PropertyInfo> properties = resultValue.GetType().GetProperties().Where(x => x.Name != nameof(ClimateDataModelByDate.Date)).ToList();
+
+                foreach (var property in properties)
                 {
                     double dataWeighted = 0;
 
                     foreach (ClimateStationReading reading in group)
                     {
-                        double weight = reading.ClimateStationIntervalWeight / weightSum;
-                        double fieldValue = GetFieldValue(reading, field.Name) ?? 0;
+                        double weight =  (weightSum == 0) ? 0 : reading.ClimateStationIntervalWeight / weightSum;
+                        double fieldValue = GetFieldValue(reading, property.Name);
                         dataWeighted += fieldValue * weight;
                     }
-
+ 
                     string fieldWeightedValue = Math.Round(dataWeighted, 2).ToString(CultureInfo.InvariantCulture);
-                    field.SetValue(field, fieldWeightedValue);
+                    property.SetValue(resultValue, fieldWeightedValue, null);
                 }
 
                 result.Add(resultValue);
@@ -131,11 +131,17 @@ namespace ClimateDatabase.Services.Implementation
                 .ToListAsync();
         }
 
-        private static double? GetFieldValue(ClimateStationReading reading, string field)
+        private static double GetFieldValue(ClimateStationReading reading, string field)
         {
-            object fieldValue = reading.GetType().GetProperty(field)?.GetValue(reading, null);
+            var propertyInfo = reading.GetType().GetProperty(field);
+            object fieldValue = propertyInfo?.GetValue(reading, null);
 
-            return fieldValue as double?;
+            if (fieldValue != null)
+            {
+                return Convert.ToDouble(fieldValue);
+            }
+
+            return default;
         }
     }
 }
