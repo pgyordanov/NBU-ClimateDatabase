@@ -12,7 +12,7 @@
     {
         protected IQueryable<T> PaginateList<T>(PaginationVM pagination, IQueryable<T> query)
         {
-            var skip = (pagination.Page - 1) * pagination.PageSize;
+            var skip = (pagination.ShowPage - 1) * pagination.PageSize;
             var take = pagination.PageSize;
 
             return query.Skip(skip).Take(take);
@@ -29,7 +29,7 @@
         {
             PaginationVM pagination = new PaginationVM
             {
-                Page = !string.IsNullOrWhiteSpace(this.Request.Query["page"]) ? int.Parse(this.Request.Query["page"]) : 1,
+                ShowPage = !string.IsNullOrWhiteSpace(this.Request.Query["showPage"]) ? int.Parse(this.Request.Query["showPage"]) : 1,
                 PageSize = !string.IsNullOrWhiteSpace(this.Request.Query["pageSize"]) ? int.Parse(this.Request.Query["pageSize"]) : 20,
             };
 

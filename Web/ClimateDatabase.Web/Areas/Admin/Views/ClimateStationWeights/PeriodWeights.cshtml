@@ -1,0 +1,125 @@
+﻿@inject Microsoft.Extensions.Options.IOptions<ClimateDatabase.Common.Settings.ApplicationSettings> AppSettings
+
+@model ClimateDatabase.Web.Areas.Admin.Models.ClimateStationWeight.ClimateStationReadingWeightListVM
+
+@{
+    ViewBag.Title = "Edit climate station weights for period";
+    Layout = "_Layout";
+    ViewData["period-active"] = "active";
+    int currentYear = 0;
+}
+
+<partial name="_StatusMessage" model="ViewBag.Alert" />
+
+<div class="page-intro">
+    <h2>Edit climate station weights for period</h2>
+</div>
+
+<div class="alert alert-alt alert-danger mb alert-large alert-validation alert-dismissable fade in" role="alert" asp-validation-summary="All">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
+</div>
+
+<partial name="_Navigation" view-data="ViewData" />
+
+<div class="row">
+    <form class="form-custom col-xs-12" method="get" asp-controller="ClimateStationWeights" asp-action="PeriodWeights" id="filter-form">
+        <div class="panel panel-white">
+            <div class="panel-body">
+
+                <div class="form-group row">
+                    <div class="col-xs-12 col-md-6">
+                        <div class="md-input" role="wrapper">
+                            <label for="fromPeriod" class="md-input-placeholder">From period</label>
+                            <input type="text" id="fromPeriod" name="fromPeriod" class="md-input-control datepicker" value="@Context.Request.Query["fromPeriod"]">
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6">
+                        <div class="md-input" role="wrapper">
+                            <label for="toPeriod" class="md-input-placeholder">To period</label>
+                            <input type="text" id="toPeriod" name="toPeriod" class="md-input-control datepicker" value="@Context.Request.Query["toPeriod"]">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="text-right">
+                        <button type="submit" class="btn btn-waves btn-primary waves-effect waves-light">
+                            Load data
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </form>
+</div>
+
+@if(Model != null){
+
+<div class="panel panel-white station-weights">
+    <div class="panel-body">
+        <form method="post" id="periodWeightsForm" asp-area="Admin" asp-controller="ClimateStationWeights" asp-action="PeriodWeights" asp-route-fromPeriod="@Context.Request.Query["fromPeriod"]" asp-route-toPeriod="@Context.Request.Query["toPeriod"]">
+            @for (int i = 0; i < Model.ClimateStationReadingWeights.Count; i++)
+            {
+            @if(currentYear != Model.ClimateStationReadingWeights[i].Year){
+                    currentYear=Model.ClimateStationReadingWeights[i].Year;
+            <div class="row mb">
+                <div class="col-xs-12 section-heading text-center">
+                    @Model.ClimateStationReadingWeights[i].Year
+                </div>
+            </div>
+                }
+
+            <div class="form-group row station">
+                <div class="col-xs-12">
+                    <input type="hidden" asp-for="ClimateStationReadingWeights[i].ClimateStationId" />
+                    <input type="hidden" asp-for="ClimateStationReadingWeights[i].ClimateStation.Id" />
+                    <input type="hidden" asp-for="ClimateStationReadingWeights[i].ClimateStation.Name" />
+                    <input type="hidden" asp-for="ClimateStationReadingWeights[i].ClimateStation.Weight" />
+                    <input type="hidden" asp-for="ClimateStationReadingWeights[i].Month" />
+                    <input type="hidden" asp-for="ClimateStationReadingWeights[i].Year" />
+                    <div class="col-xs-2 station-period text-center">
+                        @(Model.ClimateStationReadingWeights[i].Month.ToString("00"))-@(Model.ClimateStationReadingWeights[i].Year)
+                    </div>
+                    <div class="col-xs-5 station-name text-center">
+                        @(Model.ClimateStationReadingWeights[i].ClimateStation.Name)
+                    </div>
+                    <div class="col-xs-5 station-weight">
+                        <div class="md-input">
+                            <input asp-for="ClimateStationReadingWeights[i].ClimateStationIntervalWeight" type="text" class="md-input-control" />
+                        </div>
+                        <span asp-validation-for="ClimateStationReadingWeights[i].ClimateStationIntervalWeight" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            }
+
+            <div class="form-group row mt-2x text-right">
+                <button type="submit" class="btn btn-waves btn-primary waves-effect waves-light">
+                    Save weights
+                </button>
+            </div>
+        </form>
+        @DateTime.Now.ToString("yyyy-MM-dd")
+    </div>
+</div>
+
+}
+
+@section Styles{
+    <environment names="Development,Staging,Production">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="~/lib/bootstrap-material-datepicker/css/datepicker.css" />
+    </environment>
+}
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/lib/moment.js/moment.js"></script>
+    <script src="~/lib/bootstrap-material-datepicker/js/datepicker.js"></script>
+    <script>
+        $('.datepicker').bootstrapMaterialDatePicker({
+            weekStart: 1, time: false, format: "MM-YYYY", clearButton: true, monthPicker: true, minDate: moment('01/01/@AppSettings.Value.ReadingsStartYear', 'DD/MM/YYYY'), maxDate: moment(new Date(), 'DD/MM/YYYY')
+        });
+    </script>
+}

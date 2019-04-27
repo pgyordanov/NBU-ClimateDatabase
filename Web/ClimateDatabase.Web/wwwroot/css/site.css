@@ -94,11 +94,11 @@ input:-webkit-autofill {
     margin-left: 0.7rem;
 }
 
-.guest-container .alert.validation-summary-valid, body.main-body .alert.validation-summary-valid {
+.guest-container .alert.validation-summary-valid, body.main-body .alert.validation-summary-valid, body.admin-body .alert.validation-summary-valid {
     display: none;
 }
 
-.guest-container .alert > ul, body.main-body .alert > ul {
+.guest-container .alert > ul, body.main-body .alert > ul, body.admin-body .alert > ul {
     padding: 15px;
     list-style: none;
 }
@@ -271,8 +271,59 @@ span.twitter-typeahead {
 
 .form-custom .section-heading {
     font-size: 1.77rem;
+    margin-bottom: 2.2rem;
+    color: #3949ab;
+    padding: 0;
+}
+
+.form-custom .section {
+    padding: 18px 0;
+}
+
+#insert-reading-form.form-custom input.typeahead {
+    padding-top: 0;
+    padding-bottom: 0;
 }
 
 textarea {
     resize: vertical;
+}
+
+.station-weights .station .station-name {
+    font-size: 1.8rem;
+    padding-bottom: 1rem;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.station-weights .station .station-weight {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+    .station-weights .station .station-weight input {
+        padding-top: 0;
+        padding-bottom: 1rem;
+    }
+
+.station-weights .station .station-period {
+    font-size: 1.8rem;
+}
+
+.station-weights .section-heading {
+    color: #3949ab;
+    font-size: 2.8rem;
+    margin-bottom: 2rem;
+    margin-top: 3rem;
+}
+
+    .station-weights .section-heading:first-of-type {
+        margin-top: 0rem;
+    }
+#national-select {
+    height: 58px;
+}
+#national-filter {
+    margin-left: 15px;
+    margin-top: 10px;
 }

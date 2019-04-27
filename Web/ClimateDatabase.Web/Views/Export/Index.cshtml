@@ -1,0 +1,78 @@
+@using ClimateDatabase.Common.Settings
+@using Microsoft.Extensions.Options
+@model ClimateDatabase.Web.ViewModels.Export.ExportIndexVM
+@inject IOptions<ApplicationSettings> AppSettings
+
+@{
+    ViewBag.Title = "Data export";
+    Layout = "_Layout";
+}
+<div class="form-group row">
+    <div class="col-xs-12 col-md-6">
+        <div class="md-input">
+            @Html.DropDownList("ReadingProperty", Model.ClimateFields,
+                "All", new { id = "climateField-select", @class = "md-input-control" })
+        </div>
+    </div>
+    <div class="col-xs-12 col-md-3">
+        <div class="md-input">
+            @Html.DropDownList("ReadingProperty", Model.ExportType,
+                "Select export type", new { id = "exportType-select", @class = "md-input-control" })
+        </div>
+    </div>
+    <div class="col-xs-12 col-md-6" style="margin-top: 20px;">
+        <div class="md-input" role="wrapper">
+            <label for="fromPeriod" class="md-input-placeholder">From period</label>
+            <input type="text" id="fromPeriod" name="fromPeriod" class="md-input-control datepicker" value="@Context.Request.Query["fromPeriod"]">
+        </div>
+    </div>
+    <div class="col-xs-12 col-md-6" style="margin-top: 20px;">
+        <div class="md-input" role="wrapper">
+            <label for="toPeriod" class="md-input-placeholder">To period</label>
+            <input type="text" id="toPeriod" name="toPeriod" class="md-input-control datepicker" value="@Context.Request.Query["toPeriod"]">
+        </div>
+    </div>
+    <div class="col-xs-12 col-md-3" style="margin-top: 20px;">
+        <a asp-controller="Export" asp-action="GetDataAsCsv" id="export-btn" class="btn btn-waves btn-primary waves-effect waves-light" target="_blank">Export to CSV</a>
+    </div>
+</div>
+
+@section Styles{
+    <environment names="Development,Staging,Production">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="~/lib/bootstrap-material-datepicker/css/datepicker.css"/>
+    </environment>
+}
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial"/>
+    <script src="~/lib/typeahead/typeahead.bundle.js"></script>
+    <script src="~/lib/moment.js/moment.js"></script>
+    <script src="~/lib/bootstrap-material-datepicker/js/datepicker.js"></script>
+    <script>
+        $('.datepicker').bootstrapMaterialDatePicker({
+            weekStart: 1,
+            time: false,
+            format: "MM-YYYY",
+            clearButton: true,
+            monthPicker: true,
+            minDate: moment('01/01/@AppSettings.Value.ReadingsStartYear', 'DD/MM/YYYY'),
+            maxDate: moment(new Date(), 'DD/MM/YYYY')
+        });
+
+        $('#toPeriod').bootstrapMaterialDatePicker('setDate', new Date());
+        $('#fromPeriod').bootstrapMaterialDatePicker('setDate', new Date(new Date().setFullYear(new Date().getFullYear() - 1)));
+
+        $("#export-btn").click(function(e) {
+            e.preventDefault();
+            var url = $(this).attr('href');
+            var climateField = $("#climateField-select").val();
+            var from = $('#fromPeriod').val();
+            var to = $('#toPeriod').val();
+            var exportType = $("#exportType-select").val();
+            var newUrl = url + "?climateDataField=" + climateField + "&from=" + from + "&to=" + to + "&exportType=" + exportType;
+            window.open(newUrl, '_blank');
+        });
+    </script>
+}

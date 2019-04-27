@@ -4,10 +4,21 @@ namespace ClimateDatabase.Web.ViewModels
 
     public class PaginationVM
     {
-        [Range(0, int.MaxValue)]
+        // Default arguments are needed to avoid case where all attributes are = 0
+        public PaginationVM()
+        {
+            this.ShowPage = 1;
+            this.Page = 1;
+            this.PageSize = 20;
+        }
+        
+        [Range(1, int.MaxValue)]
         public int Page { get; set; }
 
         [Range(1, 40)]
         public int PageSize { get; set; }
+        
+        [Range(1, int.MaxValue)]
+        public int ShowPage { get; set; }
     }
 }

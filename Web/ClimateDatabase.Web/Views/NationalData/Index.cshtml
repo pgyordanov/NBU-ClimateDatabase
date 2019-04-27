@@ -1,0 +1,125 @@
+@inject IOptions<ApplicationSettings> AppSettings
+@using ClimateDatabase.Common.Settings
+@using Microsoft.Extensions.Options
+@model ClimateDatabase.Web.ViewModels.NationalData.NationalDataChartViewModel
+
+
+@{
+    ViewBag.Title = "";
+    Layout = "_Layout";
+}
+
+<div class="form-group row">
+    <div class="col-xs-12 col-md-3">
+        <div class="md-input">
+            @Html.DropDownList("ReadingProperty", Model.climateFields,
+                "Select Property", new {id = "national-select", @class = "md-input-control"})
+        </div>
+    </div>
+    <div class="col-xs-12 col-md-3">
+        <div class="md-input" role="wrapper">
+            <label for="fromPeriod" class="md-input-placeholder">From period</label>
+            <input type="text" id="fromPeriod" name="fromPeriod" class="md-input-control datepicker" value="@Context.Request.Query["fromPeriod"]">
+        </div>
+    </div>
+    <div class="col-xs-12 col-md-3">
+        <div class="md-input" role="wrapper">
+            <label for="toPeriod" class="md-input-placeholder">To period</label>
+            <input type="text" id="toPeriod" name="toPeriod" class="md-input-control datepicker" value="@Context.Request.Query["toPeriod"]">
+        </div>
+    </div>
+    <button type="submit" id="national-filter" class="btn btn-waves btn-primary waves-effect waves-light">
+        Filter
+    </button>
+</div>
+
+
+<canvas id="natGraph" width="400" height="200"></canvas>
+
+@section Styles{
+    <environment names="Development,Staging,Production">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="~/lib/bootstrap-material-datepicker/css/datepicker.css"/>
+    </environment>
+}
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial"/>
+    <script src="~/lib/typeahead/typeahead.bundle.js"></script>
+    <script src="~/lib/moment.js/moment.js"></script>
+    <script src="~/lib/bootstrap-material-datepicker/js/datepicker.js"></script>
+    <script>
+        $('.datepicker').bootstrapMaterialDatePicker({
+            weekStart: 1,
+            time: false,
+            format: "MM-YYYY",
+            clearButton: true,
+            monthPicker: true,
+            minDate: moment('01/01/@AppSettings.Value.ReadingsStartYear', 'DD/MM/YYYY'),
+            maxDate: moment(new Date(), 'DD/MM/YYYY')
+        });
+
+        $('#toPeriod').bootstrapMaterialDatePicker('setDate', new Date());
+        $('#fromPeriod')
+            .bootstrapMaterialDatePicker('setDate', new Date(new Date().setFullYear(new Date().getFullYear() - 1)));
+
+        var ctx = document.getElementById('natGraph').getContext('2d');
+        var myChart = new Chart(ctx,
+            {
+                type: 'bar',
+                fill: true,
+                data: {
+                    labels: Object.keys(@Html.Raw(Json.Serialize(Model.climateData.Value))),
+                    datasets: [
+                        {
+                            label: ' ',
+                            data: Object.values(@Html.Raw(Json.Serialize(Model.climateData.Value))),
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(153, 102, 255, 0.2)',
+                                'rgba(255, 159, 64, 0.2)'
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    scales: {
+                        yAxes: [
+                            {
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }
+                        ]
+                    }
+                }
+            });
+
+        $("#national-filter").click(function() {
+            $.ajax({
+                url: '@Url.Action("FetchNationalData")',
+                type: 'GET',
+                cache: false,
+                data: { fieldId: $("#national-select").val(), from: $('#fromPeriod').val(), to: $('#toPeriod').val() },
+                success: function(result) {
+                    myChart.data.labels = Object.keys(result);
+                    myChart.data.datasets[0].data = Object.values(result);
+                    myChart.update();
+                }
+            });
+        });
+    </script>
+}

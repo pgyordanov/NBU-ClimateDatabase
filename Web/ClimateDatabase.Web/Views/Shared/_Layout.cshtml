@@ -51,8 +51,8 @@
 
                 <!-- Navigation -->
                 <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-action="" asp-controller="">Link 1</a></li>
-                    <li><a asp-area="" asp-action="" asp-controller="" asp-route-page="1" asp-route-pageSize="20">Link 2</a></li>
+                    <li><a asp-area="" asp-action="Index" asp-controller="NationalData">National data</a></li>
+                    <li><a asp-area="" asp-action="Index" asp-controller="Export">Data export</a></li>
                 </ul>
                 <!-- /Navigation -->
                 <!-- Navigation Right -->
@@ -119,6 +119,7 @@
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
         <script src="~/theme/theme.js"></script>
+        <script src="~/theme/js/Chart.min.js"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>
     </environment>
     <environment names="Staging,Production">
@@ -131,6 +132,7 @@
                 crossorigin="anonymous">
         </script>
         <script src="~/theme/theme.min.js"></script>
+        <script src="~/theme/js/Chart.min.js"></script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
     <script>
