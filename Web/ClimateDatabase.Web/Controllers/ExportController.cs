@@ -1,29 +1,26 @@
-using ClimateDatabase.Common.Extensions;
-using ClimateDatabase.Web.ViewModels.NationalData;
-using Microsoft.AspNetCore.Mvc.Rendering;
-
 namespace ClimateDatabase.Web.Controllers
 {
     using System;
     using System.Collections.Generic;
-    using System.Composition;
     using System.Linq;
-    using System.Reflection.Metadata;
     using System.Threading.Tasks;
-    using ClimateDatabase.Data.Models;
+
+    using ClimateDatabase.Common.Extensions;
     using ClimateDatabase.Services.Contracts;
     using ClimateDatabase.Services.Models;
     using ClimateDatabase.Web.ViewModels.Export;
+
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Rendering;
 
     [Route("export")]
     public class ExportController : Controller
     {
-        private readonly IClimateDataService _climateData;
+        private readonly IClimateDataService climateData;
 
         public ExportController(IClimateDataService climateData)
         {
-            this._climateData = climateData;
+            this.climateData = climateData;
         }
 
         [HttpGet]
@@ -39,18 +36,18 @@ namespace ClimateDatabase.Web.Controllers
 
             if (filter.ExportType != ExportType.ByPeriodWeighted)
             {
-                List<ClimateDataModelByStation> climateDataByStation = await this._climateData.GetClimateDataByStation(climateDataFilter);
+                List<ClimateDataModelByStation> climateDataByStation = await this.climateData.GetClimateDataByStation(climateDataFilter);
                 return this.Ok(climateDataByStation);
             }
 
             if (filter.ClimateDataField == null)
             {
-                List<ClimateDataModelByDate> weightedClimateDataForPeriodFull = this._climateData.GetWeightedClimateDataForPeriodFull(climateDataFilter);
+                List<ClimateDataModelByDate> weightedClimateDataForPeriodFull = this.climateData.GetWeightedClimateDataForPeriodFull(climateDataFilter);
                 return this.Ok(weightedClimateDataForPeriodFull);
             }
 
             climateDataFilter.ClimateDataField = filter.ClimateDataField.Value;
-            var weightedFieldByPeriod = this._climateData.GetWeightedDataForPeriodByField(climateDataFilter)
+            var weightedFieldByPeriod = this.climateData.GetWeightedDataForPeriodByField(climateDataFilter)
                 .Select(
                     x => new
                     {
@@ -86,7 +83,7 @@ namespace ClimateDatabase.Web.Controllers
 
             exportTypes.First(x => x.Value == ((int)ExportType.ByPeriodWeighted).ToString()).Selected = true;
 
-            return View(
+            return this.View(
                 new ExportIndexVM()
                 {
                     ClimateFields = climateFields,

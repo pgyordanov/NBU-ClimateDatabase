@@ -1,79 +1,80 @@
-using System;
-using System.Globalization;
-using System.Linq;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using ClimateDatabase.Common.Settings;
-using ClimateDatabase.Data.Models;
-using ClimateDatabase.Services.Contracts;
-using ClimateDatabase.Web.Controllers.Base;
-using ClimateDatabase.Web.Models;
-using ClimateDatabase.Web.ViewModels;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-
 namespace ClimateDatabase.Web.Controllers
 {
+    using System;
+    using System.Globalization;
+    using System.Linq;
+
+    using AutoMapper;
+    using AutoMapper.QueryableExtensions;
+
+    using ClimateDatabase.Common.Settings;
+    using ClimateDatabase.Data.Models;
+    using ClimateDatabase.Services.Contracts;
+    using ClimateDatabase.Web.Controllers.Base;
+    using ClimateDatabase.Web.Models;
+    using ClimateDatabase.Web.ViewModels;
+
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Options;
+
     public class ClimateStationReadingsController : EntityListController
     {
-        private readonly IBaseCrudService<ClimateStationReading> _climateStationReadingService;
+        private readonly IBaseCrudService<ClimateStationReading> climateStationReadingService;
         private IOptions<ApplicationSettings> options;
 
-        public ClimateStationReadingsController(IBaseCrudService<ClimateStationReading> climateStationService,
+        public ClimateStationReadingsController(
+            IBaseCrudService<ClimateStationReading> climateStationService,
             IOptions<ApplicationSettings> options)
         {
-            _climateStationReadingService = climateStationService;
+            this.climateStationReadingService = climateStationService;
             this.options = options;
         }
 
         [HttpGet]
         [Route("/readings")]
-        public IActionResult Index(
-            PaginationVM pagination,
-            string climateStationName,
-            string fromPeriod,
-            string toPeriod)
+        public IActionResult Index(PaginationVM pagination, string climateStationName, string fromPeriod, string toPeriod)
         {
-            if (HasAlert) SetAlertModel();
+            if (this.HasAlert)
+            {
+                this.SetAlertModel();
+            }
 
-            var climateStationReadingQuery =
-                _climateStationReadingService.GetAll().Include(cr => cr.ClimateStation).AsQueryable();
+            var climateStationReadingQuery = this.climateStationReadingService.GetAll().Include(cr => cr.ClimateStation).AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(climateStationName))
-                climateStationReadingQuery = climateStationReadingQuery.Where(a =>
-                    a.ClimateStation.Name.ToLower().Contains(climateStationName.ToLower()));
+            {
+                climateStationReadingQuery = climateStationReadingQuery.Where(a => a.ClimateStation.Name.ToLower().Contains(climateStationName.ToLower()));
+            }
 
             if (!string.IsNullOrWhiteSpace(fromPeriod))
             {
-                var result = DateTime.TryParseExact(fromPeriod, "MM-yyyy", CultureInfo.InvariantCulture,
-                    DateTimeStyles.None, out var period);
+                var result = DateTime.TryParseExact(fromPeriod, "MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var period);
 
                 if (result)
+                {
                     climateStationReadingQuery = climateStationReadingQuery
-                        .Where(a => DateTime.ParseExact(a.Month.ToString("00") + "-" + a.Year, "MM-yyyy",
-                                        CultureInfo.InvariantCulture, DateTimeStyles.None) >= period);
+                        .Where(a => DateTime.ParseExact(a.Month.ToString("00") + "-" + a.Year, "MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None) >= period);
+                }
             }
 
             if (!string.IsNullOrWhiteSpace(toPeriod))
             {
-                var result = DateTime.TryParseExact(toPeriod, "MM-yyyy", CultureInfo.InvariantCulture,
-                    DateTimeStyles.None, out var period);
+                var result = DateTime.TryParseExact(toPeriod, "MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var period);
 
                 if (result)
+                {
                     climateStationReadingQuery = climateStationReadingQuery
-                        .Where(a => DateTime.ParseExact(a.Month.ToString("00") + "-" + a.Year, "MM-yyyy",
-                                        CultureInfo.InvariantCulture, DateTimeStyles.None) <= period);
+                        .Where(a => DateTime.ParseExact(a.Month.ToString("00") + "-" + a.Year, "MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None) <= period);
+                }
             }
 
             climateStationReadingQuery = climateStationReadingQuery.OrderBy(u => u.Year).ThenBy(u => u.Month)
                 .ThenBy(u => u.ClimateStation.Name);
 
+            var paginatedReadings = this.PaginateList(pagination, climateStationReadingQuery.ProjectTo<ClimateStationReadingVM>()).ToList();
 
-            var paginatedReadings =
-                PaginateList(pagination, climateStationReadingQuery.ProjectTo<ClimateStationReadingVM>()).ToList();
-
-            var totalPages = GetTotalPages(pagination.PageSize, climateStationReadingQuery.Count());
+            var totalPages = this.GetTotalPages(pagination.PageSize, climateStationReadingQuery.Count());
 
             var climateStationReadingsModel = new ClimateStationReadingListVM
             {
@@ -85,26 +86,35 @@ namespace ClimateDatabase.Web.Controllers
                 ShowPagination = totalPages > 1
             };
 
-            return View("../ClimateStationReadings/Index", climateStationReadingsModel);
+            return this.View(climateStationReadingsModel);
         }
 
         [HttpGet]
         [Route("/readings/{climateStationId}/{month}/{year}")]
         public IActionResult ClimateStationReading(string climateStationId, int month, int year)
         {
-            if (HasAlert) SetAlertModel();
+            if (this.HasAlert)
+            {
+                this.SetAlertModel();
+            }
 
-            if (string.IsNullOrWhiteSpace(climateStationId)) return NotFound("invalid climate station id");
+            if (string.IsNullOrWhiteSpace(climateStationId))
+            {
+                return this.NotFound("invalid climate station id");
+            }
 
-            var climateStationReading = _climateStationReadingService.GetAll()
+            var climateStationReading = this.climateStationReadingService.GetAll()
                 .Include(r => r.ClimateStation)
                 .FirstOrDefault(r => r.ClimateStationId == climateStationId && r.Month == month && r.Year == year);
 
-            if (climateStationReading == null) return NotFound("reading not found");
+            if (climateStationReading == null)
+            {
+                return this.NotFound("reading not found");
+            }
 
             var climateStationReadingModel = Mapper.Map<ClimateStationReadingFullVM>(climateStationReading);
 
-            return View("../ClimateStationReadings/ClimateStationReading", climateStationReadingModel);
+            return this.View(climateStationReadingModel);
         }
     }
 }

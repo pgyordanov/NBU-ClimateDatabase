@@ -47,8 +47,8 @@
 
             SeedRoles(roleManager);
             //SeedAdmin(userManager);
-            SeedStations(dbContext);
-            SeedStationReadings(dbContext);
+            //SeedStations(dbContext);
+            //SeedStationReadings(dbContext);
         }
 
         private static void SeedAdmin(UserManager<ApplicationUser> userManager)

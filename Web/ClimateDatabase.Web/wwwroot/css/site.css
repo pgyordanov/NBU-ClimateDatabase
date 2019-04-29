@@ -269,14 +269,14 @@ span.twitter-typeahead {
     box-shadow: 0 3px 8px 0 rgba(0, 0, 0, 0.12), 0 3px 12px 0 rgba(0, 0, 0, 0.09);
 }
 
-.form-custom .section-heading {
+.section-heading {
     font-size: 1.77rem;
     margin-bottom: 2.2rem;
     color: #3949ab;
     padding: 0;
 }
 
-.form-custom .section {
+.section {
     padding: 18px 0;
 }
 
@@ -320,10 +320,17 @@ textarea {
     .station-weights .section-heading:first-of-type {
         margin-top: 0rem;
     }
+
 #national-select {
     height: 58px;
 }
+
 #national-filter {
     margin-left: 15px;
     margin-top: 10px;
+}
+
+.md-input .md-input-control[disabled], .md-input .md-input-control[readonly] {
+    opacity: 1;
+    background-color: transparent;
 }
